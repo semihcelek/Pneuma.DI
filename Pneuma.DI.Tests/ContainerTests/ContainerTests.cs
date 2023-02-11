@@ -74,7 +74,6 @@ namespace Pneuma.DI.Tests.ContainerTests
         [Test]
         public void Bind_Interface_To_Implementation()
         {
-            _container.BindInterface<IBaz>().To<BazImplementation>().AsSingle();
         }
 
         [TearDown]

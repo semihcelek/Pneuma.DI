@@ -69,20 +69,7 @@ namespace Pneuma.DI.Core
             ConstructorInfo constructorInfo = constructors.FirstOrDefault();
             return constructorInfo;
         }
-
-        public BindingPrototype BindInterface<T>()
-        {
-            SanityCheck();
-            
-            Type type = typeof(T);
-
-            if (!type.IsInterface)
-            {
-                throw new BindingFailedException($"Unable to bind {type}. Non interface types cannot bind as interface.");
-            }
-            
-        }
-
+        
         private BindingPrototype BindParameterlessType(Type type)
         {
             object instance = Activator.CreateInstance(type);
