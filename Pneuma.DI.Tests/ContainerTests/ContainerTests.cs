@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Pneuma.DI.Core;
+using Pneuma.DI.Core.Binding;
 using Pneuma.DI.Exception;
 using Pneuma.DI.Tests.Examples;
 
@@ -18,25 +19,25 @@ namespace Pneuma.DI.Tests.ContainerTests
         }
 
         [Test]
-        public void Bind_Dependency_To_Container()
+        public void Bind_As_Single()
         {
-            _container.BindSingle<Foo>();
+            _container.Bind<Foo>().AsSingle();
         }
 
         [Test]
-        public void Bind_Missing_Dependency()
+        public void Bind_Missing_Dependency_As_Single()
         {
-            Assert.Throws<BindingFailedException>((() =>
+            Assert.Throws<BindingFailedException>(() =>
             {
-                _container.BindSingle<Bar>();
-            }));
+                _container.Bind<Bar>().AsSingle();
+            });
         }
         
         [Test]
-        public void Bind_Multiple_Dependencies_To_Container()
+        public void Bind_Multiple_Dependencies_As_Single()
         {
-            _container.BindSingle<Foo>();
-            _container.BindSingle<Bar>();
+            _container.Bind<Foo>().AsSingle();
+            _container.Bind<Bar>().AsSingle();
         }
     }
 }

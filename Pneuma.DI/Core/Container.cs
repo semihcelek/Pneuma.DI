@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Pneuma.DI.Core.Binding;
 using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
 {
-    public sealed class Container
+    public sealed class Container : IBinderContext, IDisposable
     {
         private readonly Dictionary<int, BindingInfo> _container;
 
@@ -18,13 +19,14 @@ namespace Pneuma.DI.Core
             _isValid = true;
         }
 
-        public void BindSingle<T>()
+        public BindingPrototype Bind<T>()
         {
             Type type = typeof(T);
-            BindInternal(type);
+
+            return BindInternal(type);
         }
 
-        private void BindInternal(Type type)
+        private BindingPrototype BindInternal(Type type)
         {
             SanityCheck();
             
@@ -37,8 +39,7 @@ namespace Pneuma.DI.Core
             int parameterCount = parameterInfos.Length;
             if (parameterCount <= 0)
             {
-                BindParameterlessType(type);
-                return;
+                return BindParameterlessType(type);
             }
             
             object[] injectParameters = new object[parameterCount];
@@ -47,7 +48,7 @@ namespace Pneuma.DI.Core
             {
                 ParameterInfo parameterInfo = parameterInfos[index];
                 
-                bool isRequiredTypeBinded = ContainerBindLookup(parameterInfo.ParameterType, out object bindedObjectInstance);
+                bool isRequiredTypeBinded = ContainerBindLookup(parameterInfo.ParameterType.GetHashCode(), out object bindedObjectInstance);
 
                 if (!isRequiredTypeBinded)
                 {
@@ -58,44 +59,59 @@ namespace Pneuma.DI.Core
 
                 injectParameters[index] = bindedObjectInstance;
             }
-
+            
             object instance = constructorInfo.Invoke(injectParameters);
-
-            BindingInfo bindingInfo = new BindingInfo(instance);
-            _container.Add(bindingInfo.GetHashCode(), bindingInfo);
+            return new BindingPrototype(instance, this);
         }
 
-        private bool ContainerBindLookup(Type lookupType, out object bindedObjectInstance)
+        private BindingPrototype BindParameterlessType(Type type)
+        {
+            object instance = Activator.CreateInstance(type);
+
+            return new BindingPrototype(instance, this);
+        }
+
+        private bool ContainerBindLookup(int hashCode, out object bindedObjectInstance)
         {
             SanityCheck();
             
             bindedObjectInstance = null;
 
-            if (!_container.ContainsKey(lookupType.GetHashCode()))
+            if (!_container.ContainsKey(hashCode))
             {
                 return false;
             }
 
-            BindingInfo bindingInfo = _container[lookupType.GetHashCode()];
+            BindingInfo bindingInfo = _container[hashCode];
             bindedObjectInstance = bindingInfo.GetBindingInstance();
 
             return true;
         }
 
-        private void BindParameterlessType(Type type)
+        public bool RegisterBinding(BindingInfo bindingInfo)
         {
-            object instance = Activator.CreateInstance(type);
-
-            BindingInfo bindingInfo = new BindingInfo(instance);
+            SanityCheck();
+            
+            if (_container.ContainsKey(bindingInfo.GetHashCode()))
+            {
+                return false;
+            }
+            
             _container.Add(bindingInfo.GetHashCode(), bindingInfo);
+            return true;
         }
-
+        
         private void SanityCheck()
         {
             if (!_isValid)
             {
                 throw new SanityCheckFailedException("Container validity is interrupted.");
             }
+        }
+
+        public void Dispose()
+        {
+            _container.Clear();
         }
     }
 }

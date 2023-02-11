@@ -10,11 +10,11 @@ namespace Pneuma.DI.Core
 
         private readonly int _hashCode;
 
-        public BindingInfo(object instance)
+        public BindingInfo(object instance, int hashCode)
         {
             _instance = instance;
             _bindingType = instance.GetType();
-            _hashCode = _bindingType.GetHashCode();
+            _hashCode = hashCode;
         }
 
         public Type GetBindingType()

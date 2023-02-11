@@ -10,19 +10,19 @@ namespace Pneuma.DI.Tests.ContainerTests
         public void BindingInfo_Retrieves_Type()
         {
             Foo fooInstance = new Foo();
-            BindingInfo bindingInfo = new BindingInfo(fooInstance);
+            BindingInfo bindingInfo = new BindingInfo(fooInstance, fooInstance.GetHashCode());
             
             Assert.IsTrue(typeof(Foo) == bindingInfo.GetBindingType());
             Assert.IsAssignableFrom<Foo>(bindingInfo.GetBindingInstance());
         }
 
         [Test]
-        public void BindingInfo_HashCode_Same_As_Injected_Objects_Type_HashCode()
+        public void BindingInfo_HashCode_Same_As_Injected_Objects_HashCode()
         {
             Foo fooInstance = new Foo();
-            BindingInfo bindingInfo = new BindingInfo(fooInstance);
+            BindingInfo bindingInfo = new BindingInfo(fooInstance, fooInstance.GetHashCode());
 
-            Assert.AreEqual(fooInstance.GetType().GetHashCode(), bindingInfo.GetHashCode());
+            Assert.AreEqual(fooInstance.GetHashCode(), bindingInfo.GetHashCode());
         }
     }
 }
