@@ -49,7 +49,6 @@ namespace Pneuma.DI.Core
                 ParameterInfo parameterInfo = parameterInfos[index];
                 
                 bool isRequiredTypeBinded = ContainerBindLookup(parameterInfo.ParameterType.GetHashCode(), out object bindedObjectInstance);
-
                 if (!isRequiredTypeBinded)
                 {
                     _isValid = false;
@@ -79,7 +78,7 @@ namespace Pneuma.DI.Core
 
             if (!_container.ContainsKey(hashCode))
             {
-                return false;
+                return CheckTransientInstances(hashCode, out bindedObjectInstance);
             }
 
             BindingInfo bindingInfo = _container[hashCode];
@@ -88,17 +87,41 @@ namespace Pneuma.DI.Core
             return true;
         }
 
-        public bool RegisterBinding(BindingInfo bindingInfo)
+        private bool CheckTransientInstances(int hashCode, out object bindedObjectInstance)
+        {
+            bindedObjectInstance = null;
+            
+            for (int index = 0; index < _container.Count; index++)
+            {
+                KeyValuePair<int, BindingInfo> bindingInfoKvp = _container.ElementAt(index);
+
+                if (hashCode != bindingInfoKvp.Value.GetBindingType().GetHashCode())
+                {
+                    continue;
+                }
+
+                bindedObjectInstance = bindingInfoKvp.Value.GetBindingInstance();
+                return true;
+            }
+            return false;
+        }
+
+        public void RegisterBinding(BindingInfo bindingInfo)
         {
             SanityCheck();
             
-            if (_container.ContainsKey(bindingInfo.GetHashCode()))
+            if (_container.ContainsKey(bindingInfo.GetBindingType().GetHashCode()))
             {
-                return false;
+                throw new BindingFailedException(
+                    $"Unable to bind {bindingInfo.GetBindingType()}. Multiple binding of a singular dependency not allowed!");
             }
             
             _container.Add(bindingInfo.GetHashCode(), bindingInfo);
-            return true;
+        }
+
+        public int GetActiveObjectCount()
+        {
+            return _container.Count;
         }
         
         private void SanityCheck()
