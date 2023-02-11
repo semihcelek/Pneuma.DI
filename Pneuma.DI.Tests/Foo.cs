@@ -2,6 +2,6 @@
 {
     public class Foo
     {
-        public const int MY_INT = 12;
+        public readonly int MyInt = 12;
     }
 }

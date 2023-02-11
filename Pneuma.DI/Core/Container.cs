@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using Pneuma.DI.Utility;
 
 namespace Pneuma.DI.Core
 {
@@ -11,30 +13,68 @@ namespace Pneuma.DI.Core
         public void BindSingle<T>()
         {
             Type type = typeof(T);
-            
-            if (_container.ContainsKey(type.GetHashCode()))
+            BindInternal(type);
+        }
+
+        private void BindInternal(Type type)
+        {
+            ConstructorInfo[] constructors = type.GetConstructors();
+
+            constructors.OrderByDescending(c => c.GetParameters().Length);
+            ConstructorInfo constructorInfo = constructors.FirstOrDefault();
+            ParameterInfo[] parameterInfos = constructorInfo.GetParameters();
+
+            int parameterCount = parameterInfos.Length;
+            if (parameterCount <= 0)
             {
+                BindParameterlessType(type);
                 return;
             }
+            
+            object[] injectParameters = new object[parameterCount];
 
-            ConstructorInfo constructors = type.GetConstructor(BindingFlags.Instance | BindingFlags.Public, null, CallingConventions.HasThis, );
-
-            foreach (ConstructorInfo constructor in constructors)
+            for (int index = 0; index < parameterCount; index++)
             {
-                if (constructor.IsPrivate || constructor.IsStatic)
+                ParameterInfo parameterInfo = parameterInfos[index];
+                
+                bool isRequiredTypeBinded = ContainerBindLookup(parameterInfo.ParameterType, out object bindedObjectInstance);
+
+                if (!isRequiredTypeBinded)
                 {
-                    continue;
+                    throw new BindingFailedException(
+                        $"Unable to find {parameterInfo.ParameterType}. Required dependency for {type} is not registered to the object graph.");
                 }
 
-                MethodBody methodBody = constructor.GetMethodBody();
-                
-                methodBody.
+                injectParameters[index] = bindedObjectInstance;
             }
-            
 
-            T instance = Activator.CreateInstance<T>();
+            object instance = constructorInfo.Invoke(injectParameters);
+
             BindingInfo bindingInfo = new BindingInfo(instance);
-            _container.Add(instance.GetHashCode(), bindingInfo);
+            _container.Add(bindingInfo.GetHashCode(), bindingInfo);
+        }
+
+        private bool ContainerBindLookup(Type lookupType, out object bindedObjectInstance)
+        {
+            bindedObjectInstance = default;
+
+            if (!_container.ContainsKey(lookupType.GetHashCode()))
+            {
+                return false;
+            }
+
+            BindingInfo bindingInfo = _container[lookupType.GetHashCode()];
+            bindedObjectInstance = bindingInfo.GetBindingInstance();
+
+            return true;
+        }
+
+        private void BindParameterlessType(Type type)
+        {
+            object instance = Activator.CreateInstance(type);
+
+            BindingInfo bindingInfo = new BindingInfo(instance);
+            _container.Add(bindingInfo.GetHashCode(), bindingInfo);
         }
     }
 }

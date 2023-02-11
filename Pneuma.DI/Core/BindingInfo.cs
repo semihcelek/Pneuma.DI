@@ -14,12 +14,11 @@ namespace Pneuma.DI.Core
         {
             _instance = instance;
             _bindingType = instance.GetType();
-            _hashCode = instance.GetHashCode();
+            _hashCode = _bindingType.GetHashCode();
         }
 
         public Type GetBindingType()
         {
-            Console.WriteLine(_bindingType);
             return _bindingType;
         }
 

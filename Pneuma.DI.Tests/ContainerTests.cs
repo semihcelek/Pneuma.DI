@@ -19,6 +19,8 @@ namespace Pneuma.DI.Tests
         public void Bind_Dependency_To_Container()
         {
             _container.BindSingle<Foo>();
+            
+            
         }
         
         [Test]

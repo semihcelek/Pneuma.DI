@@ -1,4 +1,6 @@
-﻿namespace Pneuma.DI.Tests
+﻿using System;
+
+namespace Pneuma.DI.Tests
 {
     public class Bar
     {
@@ -7,6 +9,11 @@
         public Bar(Foo foo)
         {
             _foo = foo;
+        }
+
+        public void DoStuffWithFoo()
+        {
+            Console.WriteLine(_foo.MyInt);
         }
     }
 }
