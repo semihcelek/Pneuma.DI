@@ -1,4 +1,4 @@
-﻿namespace Pneuma.DI.Utility
+﻿namespace Pneuma.DI.Exception
 {
     public class BindingFailedException : PneumaException
     {

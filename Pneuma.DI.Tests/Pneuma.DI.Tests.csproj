@@ -42,10 +42,10 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="Bar.cs" />
-        <Compile Include="BindInfoTests.cs" />
-        <Compile Include="ContainerTests.cs" />
-        <Compile Include="Foo.cs" />
+        <Compile Include="ContainerTests\BindInfoTests.cs" />
+        <Compile Include="ContainerTests\ContainerTests.cs" />
+        <Compile Include="Examples\Bar.cs" />
+        <Compile Include="Examples\Foo.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>

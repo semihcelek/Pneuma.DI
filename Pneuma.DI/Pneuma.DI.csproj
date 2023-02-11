@@ -5,4 +5,8 @@
         <TargetFramework>net481</TargetFramework>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Utility" />
+    </ItemGroup>
+
 </Project>

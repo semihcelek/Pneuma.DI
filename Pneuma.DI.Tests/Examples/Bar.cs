@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pneuma.DI.Tests
+namespace Pneuma.DI.Tests.Examples
 {
     public class Bar
     {
@@ -9,6 +9,8 @@ namespace Pneuma.DI.Tests
         public Bar(Foo foo)
         {
             _foo = foo;
+            
+            DoStuffWithFoo();
         }
 
         public void DoStuffWithFoo()

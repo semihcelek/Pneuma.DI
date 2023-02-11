@@ -1,4 +1,4 @@
-﻿namespace Pneuma.DI.Tests
+﻿namespace Pneuma.DI.Tests.Examples
 {
     public class Foo
     {

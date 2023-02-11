@@ -2,13 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Pneuma.DI.Utility;
+using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
 {
     public sealed class Container
     {
-        private readonly Dictionary<int, BindingInfo> _container = new Dictionary<int, BindingInfo>();
+        private readonly Dictionary<int, BindingInfo> _container;
+
+        private bool _isValid;
+
+        public Container()
+        {
+            _container = new Dictionary<int, BindingInfo>();
+            _isValid = true;
+        }
 
         public void BindSingle<T>()
         {
@@ -18,6 +26,8 @@ namespace Pneuma.DI.Core
 
         private void BindInternal(Type type)
         {
+            SanityCheck();
+            
             ConstructorInfo[] constructors = type.GetConstructors();
 
             constructors.OrderByDescending(c => c.GetParameters().Length);
@@ -41,6 +51,7 @@ namespace Pneuma.DI.Core
 
                 if (!isRequiredTypeBinded)
                 {
+                    _isValid = false;
                     throw new BindingFailedException(
                         $"Unable to find {parameterInfo.ParameterType}. Required dependency for {type} is not registered to the object graph.");
                 }
@@ -56,7 +67,9 @@ namespace Pneuma.DI.Core
 
         private bool ContainerBindLookup(Type lookupType, out object bindedObjectInstance)
         {
-            bindedObjectInstance = default;
+            SanityCheck();
+            
+            bindedObjectInstance = null;
 
             if (!_container.ContainsKey(lookupType.GetHashCode()))
             {
@@ -75,6 +88,14 @@ namespace Pneuma.DI.Core
 
             BindingInfo bindingInfo = new BindingInfo(instance);
             _container.Add(bindingInfo.GetHashCode(), bindingInfo);
+        }
+
+        private void SanityCheck()
+        {
+            if (!_isValid)
+            {
+                throw new SanityCheckFailedException("Container validity is interrupted.");
+            }
         }
     }
 }

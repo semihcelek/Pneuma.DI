@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace Pneuma.DI.Utility
+﻿namespace Pneuma.DI.Exception
 {
-    public class PneumaException : Exception
+    public class PneumaException : System.Exception
     {
         public PneumaException() { }
 
