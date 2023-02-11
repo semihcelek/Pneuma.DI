@@ -17,12 +17,12 @@ namespace Pneuma.DI.Tests.ContainerTests
         }
 
         [Test]
-        public void BindingInfo_HashCode_Same_As_Injected_Object_HashCode()
+        public void BindingInfo_HashCode_Same_As_Injected_Objects_Type_HashCode()
         {
             Foo fooInstance = new Foo();
             BindingInfo bindingInfo = new BindingInfo(fooInstance);
 
-            Assert.AreEqual(fooInstance.GetHashCode(), bindingInfo.GetHashCode());
+            Assert.AreEqual(fooInstance.GetType().GetHashCode(), bindingInfo.GetHashCode());
         }
     }
 }
