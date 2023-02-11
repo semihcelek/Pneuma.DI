@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Pneuma.DI.Core;
+using Pneuma.DI.Core.Binding;
 using Pneuma.DI.Tests.Examples;
 
 namespace Pneuma.DI.Tests.ContainerTests

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Pneuma.DI.Core.Binding;
+using Pneuma.DI.Core.Binding.Contexts;
 using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
@@ -29,11 +30,8 @@ namespace Pneuma.DI.Core
         private BindingPrototype BindInternal(Type type)
         {
             SanityCheck();
-            
-            ConstructorInfo[] constructors = type.GetConstructors();
 
-            constructors.OrderByDescending(c => c.GetParameters().Length);
-            ConstructorInfo constructorInfo = constructors.FirstOrDefault();
+            ConstructorInfo constructorInfo = GetPublicNonStaticConstructor(type);
             ParameterInfo[] parameterInfos = constructorInfo.GetParameters();
 
             int parameterCount = parameterInfos.Length;
@@ -61,6 +59,28 @@ namespace Pneuma.DI.Core
             
             object instance = constructorInfo.Invoke(injectParameters);
             return new BindingPrototype(instance, this);
+        }
+
+        private static ConstructorInfo GetPublicNonStaticConstructor(Type type)
+        {
+            ConstructorInfo[] constructors = type.GetConstructors();
+
+            constructors.OrderByDescending(c => c.GetParameters().Length);
+            ConstructorInfo constructorInfo = constructors.FirstOrDefault();
+            return constructorInfo;
+        }
+
+        public BindingPrototype BindInterface<T>()
+        {
+            SanityCheck();
+            
+            Type type = typeof(T);
+
+            if (!type.IsInterface)
+            {
+                throw new BindingFailedException($"Unable to bind {type}. Non interface types cannot bind as interface.");
+            }
+            
         }
 
         private BindingPrototype BindParameterlessType(Type type)

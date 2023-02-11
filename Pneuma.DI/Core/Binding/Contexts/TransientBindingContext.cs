@@ -1,4 +1,4 @@
-﻿namespace Pneuma.DI.Core.Binding
+﻿namespace Pneuma.DI.Core.Binding.Contexts
 {
     public static class TransientBindingContext
     {

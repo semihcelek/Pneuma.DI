@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Core\Binding\Binders" />
       <Folder Include="Utility" />
     </ItemGroup>
 

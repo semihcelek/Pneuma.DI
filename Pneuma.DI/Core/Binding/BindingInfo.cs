@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pneuma.DI.Core
+namespace Pneuma.DI.Core.Binding
 {
     public readonly struct BindingInfo
     {
