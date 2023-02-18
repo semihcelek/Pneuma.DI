@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
+using Pneuma.DI.Core.Bindings;
 using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core.Injectors

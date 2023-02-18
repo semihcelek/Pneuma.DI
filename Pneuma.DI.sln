@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pneuma.DI", "Pneuma.DI\Pneu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pneuma.DI.Tests", "Pneuma.DI.Tests\Pneuma.DI.Tests.csproj", "{B6824B2F-C4A4-499A-9293-8FFB2FE7108A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pneuma.Sandbox", "Pneuma.Sandbox\Pneuma.Sandbox.csproj", "{DA18D407-E9D1-426B-AABC-EB52670C8CC0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{B6824B2F-C4A4-499A-9293-8FFB2FE7108A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6824B2F-C4A4-499A-9293-8FFB2FE7108A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6824B2F-C4A4-499A-9293-8FFB2FE7108A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA18D407-E9D1-426B-AABC-EB52670C8CC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA18D407-E9D1-426B-AABC-EB52670C8CC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA18D407-E9D1-426B-AABC-EB52670C8CC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA18D407-E9D1-426B-AABC-EB52670C8CC0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

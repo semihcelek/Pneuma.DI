@@ -1,7 +1,7 @@
 ﻿using System;
 using Pneuma.DI.Core.BindingContexts;
 
-namespace Pneuma.DI.Core
+namespace Pneuma.DI.Core.Bindings
 {
     public readonly struct Binding : IEquatable<Binding>
     {

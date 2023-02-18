@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Pneuma.DI.Core.Bindings;
 using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
@@ -19,18 +20,18 @@ namespace Pneuma.DI.Core
             _isValid = true;
         }
 
-        public BindingBuilder.BindingBuilder Bind<T>()
+        public BindingBuilder Bind<T>()
         {
             Type type = typeof(T);
 
             return BindInternal(type);
         }
 
-        private BindingBuilder.BindingBuilder BindInternal(Type type)
+        private BindingBuilder BindInternal(Type type)
         {
             SanityCheck();
             
-            return new BindingBuilder.BindingBuilder(this, type);
+            return new BindingBuilder(this, type);
         }
         
         public bool ContainerBindingLookup(Type lookupType, out Binding binding)

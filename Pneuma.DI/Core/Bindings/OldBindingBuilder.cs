@@ -2,7 +2,7 @@
 using Pneuma.DI.Core.BindingContexts;
 using Pneuma.DI.Core.Injectors;
 
-namespace Pneuma.DI.Core.BindingBuilder
+namespace Pneuma.DI.Core.Bindings
 {
     public ref struct OldBindingBuilder
     {

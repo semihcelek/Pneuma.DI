@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pneuma.DI.Core.BindingBuilder;
+namespace Pneuma.DI.Core.Bindings;
 
 public class BindingBuilder: BindingLifeTimeBuilder<BindingBuilder>
 {
