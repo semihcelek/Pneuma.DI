@@ -2,6 +2,6 @@
 {
     public interface IInjector
     {
-        BindingBuilder Bind<T>();
+        BindingBuilder.BindingBuilder Bind<T>();
     }
 }

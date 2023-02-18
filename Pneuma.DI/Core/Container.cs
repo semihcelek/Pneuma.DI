@@ -6,33 +6,31 @@ namespace Pneuma.DI.Core
 {
     public sealed class Container : IContainer, IInjector ,IDisposable
     {
-        private readonly List<Binding> _singletonRegistrations;
-        private readonly List<Binding> _transientRegistrations;
+        private readonly Dictionary<Type, Binding> _singletonRegistrations;
+        private readonly HashSet<Binding> _transientRegistrations;
 
         private bool _isValid;
 
         public Container()
         {
-            _singletonRegistrations = new List<Binding>();
-            _transientRegistrations = new List<Binding>();
+            _singletonRegistrations = new Dictionary<Type, Binding>();
+            _transientRegistrations = new HashSet<Binding>();
             
             _isValid = true;
         }
 
-        public BindingBuilder Bind<T>()
+        public BindingBuilder.BindingBuilder Bind<T>()
         {
             Type type = typeof(T);
 
             return BindInternal(type);
         }
 
-        private BindingBuilder BindInternal(Type type)
+        private BindingBuilder.BindingBuilder BindInternal(Type type)
         {
             SanityCheck();
             
-            BindingBuilder bindingBuilder = BindingBuilder.Initialize(type, this);
-
-            return bindingBuilder;
+            return new BindingBuilder.BindingBuilder(this, type);
         }
         
         public bool ContainerBindingLookup(Type lookupType, out Binding binding)

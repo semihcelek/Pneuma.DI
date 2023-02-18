@@ -2,9 +2,9 @@
 using Pneuma.DI.Core.BindingContexts;
 using Pneuma.DI.Core.Injectors;
 
-namespace Pneuma.DI.Core
+namespace Pneuma.DI.Core.BindingBuilder
 {
-    public ref struct BindingBuilder
+    public ref struct OldBindingBuilder
     {
         private readonly IContainer _container;
         
@@ -14,7 +14,7 @@ namespace Pneuma.DI.Core
 
         public BindingLifeTime BindingLifeTime;
 
-        public BindingBuilder(Type buildingType, IContainer container)
+        public OldBindingBuilder(Type buildingType, IContainer container)
         {
             _buildingType = buildingType;
             _container = container;
@@ -24,12 +24,12 @@ namespace Pneuma.DI.Core
             BindingLifeTime = BindingLifeTime.Unspecified;
         }
 
-        public static BindingBuilder Initialize(Type buildingType, IContainer container)
+        public static OldBindingBuilder Initialize(Type buildingType, IContainer container)
         {
-            return new BindingBuilder(buildingType, container);
+            return new OldBindingBuilder(buildingType, container);
         }
 
-        private BindingBuilder ConcreteTypeBinding()
+        private OldBindingBuilder ConcreteTypeBinding()
         {
             using ConstructorInjector constructorInjector = ConstructorInjector.Create(_container);
 
@@ -39,7 +39,7 @@ namespace Pneuma.DI.Core
             return this;
         }
         
-        private BindingBuilder AbstractTypeBinding()
+        private OldBindingBuilder AbstractTypeBinding()
         {
             return this;
         }
