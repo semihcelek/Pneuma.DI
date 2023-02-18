@@ -20,9 +20,10 @@ namespace Pneuma.DI.Core.Bindings
             BindingLifeTime = bindingLifeTime;
         }
 
-        public Binding(Type bindingType) : this()
+        public Binding(Type bindingType, BindingLifeTime bindingLifeTime) : this()
         {
             BindingType = bindingType;
+            BindingLifeTime = bindingLifeTime;
         }
 
         public override int GetHashCode()
@@ -37,7 +38,9 @@ namespace Pneuma.DI.Core.Bindings
 
         private int GetHashCodeConsideringBindingLifeTime()
         {
-            return BindingType.GetHashCode();
+            return  BindingLifeTime == BindingLifeTime.Singular 
+                ? BindingType.GetHashCode() 
+                : Instance.GetHashCode();
         }
     }
 }

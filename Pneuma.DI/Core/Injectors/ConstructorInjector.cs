@@ -20,7 +20,7 @@ namespace Pneuma.DI.Core.Injectors
             return new ConstructorInjector(container);
         }
 
-        public Type InjectAndActivateType(Type buildingType)
+        public object InjectAndActivateType(Type buildingType)
         {
             ConstructorInfo constructorInfo = GetPublicNonStaticConstructor(buildingType);
             
@@ -45,10 +45,10 @@ namespace Pneuma.DI.Core.Injectors
                         $"Unable to find {parameterInfo.ParameterType}. Required dependency for {buildingType} is not registered to the object graph.");
                 }
             
-                injectParameters[index] = binding.BindingType;
+                injectParameters[index] = binding.Instance;
             }
-
-            Type instance = (Type)Activator.CreateInstance(buildingType, injectParameters);
+            
+            object instance = Activator.CreateInstance(buildingType, injectParameters);
             return instance;
         }
                 
@@ -56,14 +56,18 @@ namespace Pneuma.DI.Core.Injectors
         {
             ConstructorInfo[] constructors = type.GetConstructors();
 
-            constructors.OrderByDescending(c => c.GetParameters().Length);
-            ConstructorInfo constructorInfo = constructors.FirstOrDefault();
+            if (constructors.Length > 1)
+            {
+                throw new PneumaException("Multiple constructors found exception!");
+            }
+            
+            ConstructorInfo constructorInfo = constructors[0];
             return constructorInfo;
         }
         
-        private Type BindParameterlessType(Type type)
+        private object BindParameterlessType(Type type)
         {
-            Type instance = (Type)Activator.CreateInstance(type);
+            object instance = Activator.CreateInstance(type);
 
             return instance;
         }

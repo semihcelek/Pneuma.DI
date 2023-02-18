@@ -14,6 +14,9 @@ public class BindingLifeTimeBuilder<T> : BindingInjectionBuilder<T> where T: Bin
     public T AsSingle()
     {
         _bindingLifeTime = BindingLifeTime.Singular;
+        Binding binding = new Binding(ActivatedObject, BindingType, ActivatedObject.GetType(),
+            BindingLifeTime.Singular);
+        Container.RegisterBinding(binding, BindingLifeTime.Singular);
         
         return this as T;
     }
@@ -21,6 +24,9 @@ public class BindingLifeTimeBuilder<T> : BindingInjectionBuilder<T> where T: Bin
     public T AsTransient()
     {
         _bindingLifeTime = BindingLifeTime.Transient;
+        Binding binding = new Binding(ActivatedObject, BindingType, ActivatedObject.GetType(),
+            BindingLifeTime.Transient);
+        Container.RegisterBinding(binding, BindingLifeTime.Transient);
 
         return this as T;
     }

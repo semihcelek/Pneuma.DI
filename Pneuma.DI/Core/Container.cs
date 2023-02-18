@@ -46,7 +46,7 @@ namespace Pneuma.DI.Core
                 return true;
             }
 
-            Binding placeHolderBinding = new Binding(lookupType);
+            Binding placeHolderBinding = new Binding(lookupType, BindingLifeTime.Transient);
             if (_transientRegistrations.TryGetValue(placeHolderBinding, out Binding registeredBinding))
             {
                 binding = registeredBinding;
@@ -67,6 +67,7 @@ namespace Pneuma.DI.Core
                     _transientRegistrations.Add(binding);
                     return true;
                 default:
+                    _isValid = false;
                     throw new PneumaException("Unable to register binding! Please specify the lifetime of the binding");
             }
         }
