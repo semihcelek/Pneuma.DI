@@ -13,10 +13,4 @@ public abstract class BindingBuilderBase
         Container = container;
         BuildingType = buildingType;
     }
-
-    
-    public Binding GetBinding()
-    {
-        return new Binding();
-    }
 }

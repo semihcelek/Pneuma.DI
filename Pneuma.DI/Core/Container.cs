@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Pneuma.DI.Core.BindingContexts;
 using Pneuma.DI.Core.Bindings;
 using Pneuma.DI.Exception;
 
@@ -8,6 +9,7 @@ namespace Pneuma.DI.Core
     public sealed class Container : IContainer, IInjector ,IDisposable
     {
         private readonly Dictionary<Type, Binding> _singletonRegistrations;
+        
         private readonly HashSet<Binding> _transientRegistrations;
 
         private bool _isValid;
@@ -36,12 +38,37 @@ namespace Pneuma.DI.Core
         
         public bool ContainerBindingLookup(Type lookupType, out Binding binding)
         {
-            throw new NotImplementedException();
+            binding = default;
+            
+            if (_singletonRegistrations.ContainsKey(lookupType))
+            {
+                binding = _singletonRegistrations[lookupType];
+                return true;
+            }
+
+            Binding placeHolderBinding = new Binding(lookupType);
+            if (_transientRegistrations.TryGetValue(placeHolderBinding, out Binding registeredBinding))
+            {
+                binding = registeredBinding;
+                return true;
+            }
+
+            return false;
         }
 
-        public bool RegisterBinding(Binding binding)
+        public bool RegisterBinding(Binding binding, BindingLifeTime bindingLifeTime)
         {
-            throw new NotImplementedException();
+            switch (bindingLifeTime)
+            {
+                case BindingLifeTime.Singular:
+                    _singletonRegistrations.Add(binding.BindingType, binding);
+                    return true;
+                case BindingLifeTime.Transient:
+                    _transientRegistrations.Add(binding);
+                    return true;
+                default:
+                    throw new PneumaException("Unable to register binding! Please specify the lifetime of the binding");
+            }
         }
 
         private void SanityCheck()
