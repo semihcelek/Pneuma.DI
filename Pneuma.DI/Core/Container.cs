@@ -24,18 +24,18 @@ namespace Pneuma.DI.Core
 
         public BindingBuilder Bind<T>()
         {
-            Type type = typeof(T);
-
-            return BindInternal(type);
-        }
-
-        private BindingBuilder BindInternal(Type type)
-        {
             SanityCheck();
-            
+            Type type = typeof(T);
             return new BindingBuilder(this, type);
         }
-        
+
+        public BindingBuilder BindInterface<T>()
+        {
+            SanityCheck();
+            Type type = typeof(T);
+            return new BindingBuilder(this, type);
+        }
+
         public bool ContainerBindingLookup(Type lookupType, out Binding binding)
         {
             binding = default;

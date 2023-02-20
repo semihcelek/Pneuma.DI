@@ -50,6 +50,7 @@
         <Compile Include="Examples\BazImplementation.cs" />
         <Compile Include="Examples\Foo.cs" />
         <Compile Include="Examples\IBaz.cs" />
+        <Compile Include="Examples\Qux.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
