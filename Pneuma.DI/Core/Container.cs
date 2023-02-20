@@ -8,16 +8,16 @@ namespace Pneuma.DI.Core
 {
     public sealed class Container : IContainer, IInjector ,IDisposable
     {
-        private readonly Dictionary<Type, Binding> _singletonRegistrations;
+        private readonly Dictionary<int, Binding> _singletonRegistrations;
         
-        private readonly HashSet<Binding> _transientRegistrations;
+        private readonly List<Binding> _transientRegistrations;
 
         private bool _isValid;
 
         public Container()
         {
-            _singletonRegistrations = new Dictionary<Type, Binding>();
-            _transientRegistrations = new HashSet<Binding>();
+            _singletonRegistrations = new Dictionary<int, Binding>();
+            _transientRegistrations = new List<Binding>();
             
             _isValid = true;
         }
@@ -39,20 +39,28 @@ namespace Pneuma.DI.Core
         public bool ContainerBindingLookup(Type lookupType, out Binding binding)
         {
             binding = default;
+
+            int lookupTypeHashCode = lookupType.GetHashCode();
+
+            if (_singletonRegistrations.ContainsKey(lookupTypeHashCode))
+            {
+                binding = _singletonRegistrations[lookupTypeHashCode];
+                return true;
+            }
             
-            if (_singletonRegistrations.ContainsKey(lookupType))
+            for (int index = 0; index < _transientRegistrations.Count; index++)
             {
-                binding = _singletonRegistrations[lookupType];
+                Binding transientBinding = _transientRegistrations[index];
+
+                int bindingTypeHashCode = transientBinding.BindingType.GetHashCode();
+                if (bindingTypeHashCode != lookupTypeHashCode)
+                {
+                    continue;
+                }
+                
+                binding = transientBinding;
                 return true;
             }
-
-            Binding placeHolderBinding = new Binding(lookupType, BindingLifeTime.Transient);
-            if (_transientRegistrations.TryGetValue(placeHolderBinding, out Binding registeredBinding))
-            {
-                binding = registeredBinding;
-                return true;
-            }
-
             return false;
         }
 
@@ -61,14 +69,14 @@ namespace Pneuma.DI.Core
             switch (bindingLifeTime)
             {
                 case BindingLifeTime.Singular:
-                    _singletonRegistrations.Add(binding.BindingType, binding);
+                    _singletonRegistrations.Add(binding.GetHashCode(), binding);
                     return true;
                 case BindingLifeTime.Transient:
                     _transientRegistrations.Add(binding);
                     return true;
                 default:
                     _isValid = false;
-                    throw new PneumaException("Unable to register binding! Please specify the lifetime of the binding");
+                    throw new PneumaException("Unable to register binding! Please specify valid lifetime for the binding");
             }
         }
 

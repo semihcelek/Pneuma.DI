@@ -42,7 +42,7 @@ namespace Pneuma.DI.Tests.ContainerTests
         [Test]
         public void Bind_Same_Dependency_As_Single()
         {
-            Assert.Throws<BindingFailedException>(() =>
+            Assert.Throws<System.ArgumentException>(() =>
             {
                 _container.Bind<Foo>().AsSingle();
                 _container.Bind<Foo>().AsSingle();

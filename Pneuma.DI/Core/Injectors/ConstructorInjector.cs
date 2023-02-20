@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Reflection;
 using Pneuma.DI.Core.Bindings;
 using Pneuma.DI.Exception;
@@ -68,7 +67,6 @@ namespace Pneuma.DI.Core.Injectors
         private object BindParameterlessType(Type type)
         {
             object instance = Activator.CreateInstance(type);
-
             return instance;
         }
 
