@@ -73,7 +73,19 @@ namespace Pneuma.DI.Tests.ContainerTests
         public void Bind_Interface_To_Implementation()
         {
             _container.BindInterface<IBaz>().To<BazImplementation>().AsSingle();
-            _container.Bind<Qux>().AsSingle();
+
+            Assert.AreEqual(1, _container.GetActiveObjectCount());
+        }
+
+        [Test]
+        public void Bind_Interface_To_Implementation_Transient()
+        {
+            _container.BindInterface<IBaz>().To<BazImplementation>().AsTransient();
+            _container.BindInterface<IBaz>().To<BazImplementation>().AsTransient();
+            _container.Bind<IBaz>().To<BazImplementation>().AsTransient();
+            _container.Bind<IBaz>().To<BazImplementation>().AsTransient();
+            
+            Assert.AreEqual(4, _container.GetActiveObjectCount());
         }
 
         [TearDown]
