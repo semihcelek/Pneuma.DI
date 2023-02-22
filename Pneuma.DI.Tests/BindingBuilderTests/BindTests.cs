@@ -4,7 +4,7 @@ using Pneuma.DI.Core.BindingContexts;
 using Pneuma.DI.Core.Bindings;
 using Pneuma.DI.Tests.Examples;
 
-namespace Pneuma.DI.Tests.ContainerTests
+namespace Pneuma.DI.Tests.BindingBuilderTests
 {
     public class BindInfoTests
     {

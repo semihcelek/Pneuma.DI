@@ -3,9 +3,10 @@ using Pneuma.DI.Core.BindingContexts;
 
 namespace Pneuma.DI.Core.Bindings;
 
-public class BindingLifeTimeBuilder<TBinding, TBuilder> : BindingInjectionBuilder<TBinding, TBuilder> where TBuilder: BindingLifeTimeBuilder<TBinding, TBuilder>
+public class BindingLifeTimeBuilder<TBinding, TBuilder> : BindingInjectionBuilder<TBinding, TBuilder>
+    where TBuilder : BindingLifeTimeBuilder<TBinding, TBuilder>
 {
-    private BindingLifeTime _bindingLifeTime;
+    protected BindingLifeTime BindingLifeTime;
     
     public BindingLifeTimeBuilder(IContainer container) : base(container)
     {
@@ -15,7 +16,7 @@ public class BindingLifeTimeBuilder<TBinding, TBuilder> : BindingInjectionBuilde
     {
         InjectDependencies<TBinding>();
 
-        _bindingLifeTime = BindingLifeTime.Singular;
+        BindingLifeTime = BindingLifeTime.Singular;
         Binding binding = new Binding(ActivatedObject, typeof(TBinding), ActivatedObject.GetType(),
             BindingLifeTime.Singular);
         Container.RegisterBinding(binding, BindingLifeTime.Singular);
@@ -27,7 +28,7 @@ public class BindingLifeTimeBuilder<TBinding, TBuilder> : BindingInjectionBuilde
     {
         InjectDependencies<TBinding>();
         
-        _bindingLifeTime = BindingLifeTime.Transient;
+        BindingLifeTime = BindingLifeTime.Transient;
         Binding binding = new Binding(ActivatedObject, typeof(TBinding), ActivatedObject.GetType(),
             BindingLifeTime.Transient);
         Container.RegisterBinding(binding, BindingLifeTime.Transient);

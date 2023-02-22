@@ -4,6 +4,6 @@
     {
         Unspecified,
         Singular,
-        Transient,
+        Transient
     }
 }

@@ -43,8 +43,8 @@
         </Reference>
     </ItemGroup>
     <ItemGroup>
-        <Compile Include="ContainerTests\BindTests.cs" />
-        <Compile Include="ContainerTests\BindingBuilderTests.cs" />
+        <Compile Include="BindingBuilderTests\BindingBuilderTests.cs" />
+        <Compile Include="BindingBuilderTests\BindTests.cs" />
         <Compile Include="ContainerTests\ContainerTests.cs" />
         <Compile Include="Examples\Bar.cs" />
         <Compile Include="Examples\BazImplementation.cs" />

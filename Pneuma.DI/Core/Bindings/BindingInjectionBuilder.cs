@@ -4,7 +4,8 @@ using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core.Bindings;
 
-public class BindingInjectionBuilder<TBinding, TBuilder> : BindingBuilderBase where TBuilder : BindingInjectionBuilder<TBinding, TBuilder>
+public class BindingInjectionBuilder<TBinding, TBuilder> : BindingBuilderBase
+    where TBuilder : BindingInjectionBuilder<TBinding, TBuilder>
 {
     protected object ActivatedObject;
 

@@ -5,7 +5,7 @@ using Pneuma.DI.Core.BindingContexts;
 using Pneuma.DI.Core.Bindings;
 using Pneuma.DI.Tests.Examples;
 
-namespace Pneuma.DI.Tests.ContainerTests;
+namespace Pneuma.DI.Tests.BindingBuilderTests;
 
 public class BindingBuilderTests
 {
@@ -96,5 +96,20 @@ public class BindingBuilderTests
         Assert.AreNotEqual(typeof(IBaz).GetHashCode(), retrievedBinding.GetHashCode());
         Assert.IsTrue(retrievedBinding.BindingLifeTime == BindingLifeTime.Transient);
     }
+    
+    [Test]
+    public void BindingBuilder_Binds_Lazy()
+    {
+        var bindingBuilder = new BindingBuilder<IBaz>(_mockContainer);
+        bindingBuilder.To<BazImplementation>().AsTransient().Lazy();
 
+        _mockContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
+        
+        Assert.AreEqual(typeof(IBaz), retrievedBinding.BindingType);
+        Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
+        Assert.AreEqual(typeof(BazImplementation), retrievedBinding.InstanceType);
+        
+        Assert.AreNotEqual(typeof(IBaz).GetHashCode(), retrievedBinding.GetHashCode());
+        Assert.IsTrue(retrievedBinding.BindingLifeTime == BindingLifeTime.Transient);
+    }
 }
