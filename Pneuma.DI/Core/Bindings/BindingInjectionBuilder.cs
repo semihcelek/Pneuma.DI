@@ -37,9 +37,9 @@ public class BindingInjectionBuilder<TBinding, TBuilder> : BindingBuilderBase wh
         return buildingType;
     }
 
-    public BindingBuilder<TBinding> To<T1>()
+    public BindingBuilder<TBinding> To<TConcrete>() where TConcrete : TBinding
     {
-        SpecifiedConcreteType = typeof(T1);
+        SpecifiedConcreteType = typeof(TConcrete);
         
         return this as BindingBuilder<TBinding>;
     }  

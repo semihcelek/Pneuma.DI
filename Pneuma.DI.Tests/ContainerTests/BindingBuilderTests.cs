@@ -92,6 +92,7 @@ public class BindingBuilderTests
         Assert.AreEqual(typeof(IBaz), retrievedBinding.BindingType);
         Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
         Assert.AreEqual(typeof(BazImplementation), retrievedBinding.InstanceType);
+        
         Assert.AreNotEqual(typeof(IBaz).GetHashCode(), retrievedBinding.GetHashCode());
         Assert.IsTrue(retrievedBinding.BindingLifeTime == BindingLifeTime.Transient);
     }
