@@ -4,27 +4,29 @@ using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core.Bindings;
 
-public class BindingInjectionBuilder<T> : BindingBuilderBase where T : BindingInjectionBuilder<T>
+public class BindingInjectionBuilder<TBinding, TBuilder> : BindingBuilderBase where TBuilder : BindingInjectionBuilder<TBinding, TBuilder>
 {
     protected object ActivatedObject;
 
     protected Type SpecifiedConcreteType;
     
-    public BindingInjectionBuilder(IContainer container, Type buildingType) : base(container, buildingType)
+    public BindingInjectionBuilder(IContainer container) : base(container)
     {
     }
 
-    protected void InjectDependencies()
+    protected void InjectDependencies<T>()
     {
         using ConstructorInjector constructorInjector = ConstructorInjector.Create(Container);
 
-        Type concreteType = RetrieveConcreteType();
+        Type concreteType = RetrieveConcreteType<T>();
         ActivatedObject = constructorInjector.InjectAndActivateType(concreteType);
     }
 
-    protected Type RetrieveConcreteType()
+    protected Type RetrieveConcreteType<T>()
     {
-        if (BuildingType.IsAbstract || BuildingType.IsInterface)
+        Type buildingType = typeof(T);
+        
+        if (buildingType.IsAbstract || buildingType.IsInterface)
         {
             return SpecifiedConcreteType == null
                 ? throw new BindingFailedException(
@@ -32,13 +34,13 @@ public class BindingInjectionBuilder<T> : BindingBuilderBase where T : BindingIn
                 : SpecifiedConcreteType;
         }
         
-        return BuildingType;
+        return buildingType;
     }
 
-    public T To<T1>()
+    public BindingBuilder<TBinding> To<T1>()
     {
         SpecifiedConcreteType = typeof(T1);
         
-        return this as T;
+        return this as BindingBuilder<TBinding>;
     }  
 }

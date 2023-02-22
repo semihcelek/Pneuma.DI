@@ -3,35 +3,35 @@ using Pneuma.DI.Core.BindingContexts;
 
 namespace Pneuma.DI.Core.Bindings;
 
-public class BindingLifeTimeBuilder<T> : BindingInjectionBuilder<T> where T: BindingLifeTimeBuilder<T>
+public class BindingLifeTimeBuilder<TBinding, TBuilder> : BindingInjectionBuilder<TBinding, TBuilder> where TBuilder: BindingLifeTimeBuilder<TBinding, TBuilder>
 {
     private BindingLifeTime _bindingLifeTime;
     
-    public BindingLifeTimeBuilder(IContainer container, Type buildingType) : base(container, buildingType)
+    public BindingLifeTimeBuilder(IContainer container) : base(container)
     {
     }
 
-    public T AsSingle()
+    public BindingBuilder<TBinding> AsSingle()
     {
-        InjectDependencies();
+        InjectDependencies<TBinding>();
 
         _bindingLifeTime = BindingLifeTime.Singular;
-        Binding binding = new Binding(ActivatedObject, BuildingType, ActivatedObject.GetType(),
+        Binding binding = new Binding(ActivatedObject, typeof(TBinding), ActivatedObject.GetType(),
             BindingLifeTime.Singular);
         Container.RegisterBinding(binding, BindingLifeTime.Singular);
         
-        return this as T;
+        return this as BindingBuilder<TBinding>;
     }
 
-    public T AsTransient()
+    public BindingBuilder<TBinding> AsTransient()
     {
-        InjectDependencies();
+        InjectDependencies<TBinding>();
         
         _bindingLifeTime = BindingLifeTime.Transient;
-        Binding binding = new Binding(ActivatedObject, BuildingType, ActivatedObject.GetType(),
+        Binding binding = new Binding(ActivatedObject, typeof(TBinding), ActivatedObject.GetType(),
             BindingLifeTime.Transient);
         Container.RegisterBinding(binding, BindingLifeTime.Transient);
 
-        return this as T;
+        return this as BindingBuilder<TBinding>;
     }
 }

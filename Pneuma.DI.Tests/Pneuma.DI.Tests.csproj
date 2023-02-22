@@ -46,7 +46,6 @@
         <Compile Include="ContainerTests\BindTests.cs" />
         <Compile Include="ContainerTests\BindingBuilderTests.cs" />
         <Compile Include="ContainerTests\ContainerTests.cs" />
-        <Compile Include="ContainerTests\MockContainer.cs" />
         <Compile Include="Examples\Bar.cs" />
         <Compile Include="Examples\BazImplementation.cs" />
         <Compile Include="Examples\Foo.cs" />

@@ -2,9 +2,9 @@
 
 namespace Pneuma.DI.Core.Bindings;
 
-public class BindingBuilder: BindingLifeTimeBuilder<BindingBuilder>
+public class BindingBuilder<TBinding> : BindingLifeTimeBuilder<TBinding, BindingBuilder<TBinding>>
 {
-    public BindingBuilder(IContainer container, Type buildingType) : base(container, buildingType)
+    public BindingBuilder(IContainer container) : base(container)
     {
     }
 }

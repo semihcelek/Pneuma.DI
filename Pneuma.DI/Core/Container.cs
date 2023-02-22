@@ -22,18 +22,16 @@ namespace Pneuma.DI.Core
             _isValid = true;
         }
 
-        public BindingBuilder Bind<T>()
+        public BindingBuilder<T> Bind<T>()
         {
             SanityCheck();
-            Type type = typeof(T);
-            return new BindingBuilder(this, type);
+            return new BindingBuilder<T>(this);
         }
 
-        public BindingBuilder BindInterface<T>()
+        public BindingBuilder<T> BindInterface<T>()
         {
             SanityCheck();
-            Type type = typeof(T);
-            return new BindingBuilder(this, type);
+            return new BindingBuilder<T>(this);
         }
 
         public bool ContainerBindingLookup(Type lookupType, out Binding binding)

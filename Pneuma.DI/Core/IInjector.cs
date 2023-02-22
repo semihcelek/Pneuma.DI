@@ -4,7 +4,7 @@ namespace Pneuma.DI.Core
 {
     public interface IInjector
     {
-        BindingBuilder Bind<T>();
-        BindingBuilder BindInterface<T>();
+        BindingBuilder<T> Bind<T>();
+        BindingBuilder<T> BindInterface<T>();
     }
 }

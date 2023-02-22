@@ -1,5 +1,6 @@
 ﻿using System;
 using NUnit.Framework;
+using Pneuma.DI.Core;
 using Pneuma.DI.Core.BindingContexts;
 using Pneuma.DI.Core.Bindings;
 using Pneuma.DI.Tests.Examples;
@@ -8,42 +9,47 @@ namespace Pneuma.DI.Tests.ContainerTests;
 
 public class BindingBuilderTests
 {
-    private MockContainer _mockContainer; 
+    private IContainer _mockContainer; 
     
     [SetUp]
     public void Setup()
     {
-        _mockContainer = new MockContainer();
+        _mockContainer = new Container();
     }
     
     [Test]
     public void BindingBuilder_Binds_Singleton()
     {
-        BindingBuilder bindingBuilder = new BindingBuilder(_mockContainer, typeof(Foo));
+        BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_mockContainer);
 
         bindingBuilder.AsSingle();
 
-        Assert.AreEqual(typeof(Foo), _mockContainer.RegisteredBinding.BindingType);
-        Assert.AreEqual(typeof(Foo), _mockContainer.RegisteredBinding.Instance.GetType());
-        Assert.AreEqual(typeof(Foo), _mockContainer.RegisteredBinding.InstanceType);
+        _mockContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
+        
+        Assert.AreEqual(typeof(Foo), retrievedBinding.BindingType);
+        Assert.AreEqual(typeof(Foo), retrievedBinding.Instance.GetType());
+        Assert.AreEqual(typeof(Foo), retrievedBinding.InstanceType);
 
-        Assert.AreEqual(typeof(Foo).GetHashCode(), _mockContainer.RegisteredBinding.GetHashCode());
-        Assert.IsTrue(_mockContainer.RegisteredBinding.BindingLifeTime == BindingLifeTime.Singular);
+        Assert.AreEqual(typeof(Foo).GetHashCode(), retrievedBinding.GetHashCode());
+        Assert.IsTrue(retrievedBinding.BindingLifeTime == BindingLifeTime.Singular);
     }
     
     [Test]
     public void BindingBuilder_Binds_Transient()
     {
-        BindingBuilder bindingBuilder = new BindingBuilder(_mockContainer, typeof(Foo));
+        
+        BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_mockContainer);
 
         bindingBuilder.AsTransient();
 
-        Assert.AreEqual(typeof(Foo), _mockContainer.RegisteredBinding.BindingType);
-        Assert.AreEqual(typeof(Foo), _mockContainer.RegisteredBinding.Instance.GetType());
-        Assert.AreEqual(typeof(Foo), _mockContainer.RegisteredBinding.InstanceType);
+        _mockContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
+
+        Assert.AreEqual(typeof(Foo), retrievedBinding.BindingType);
+        Assert.AreEqual(typeof(Foo), retrievedBinding.Instance.GetType());
+        Assert.AreEqual(typeof(Foo), retrievedBinding.InstanceType);
         
-        Assert.AreNotEqual(typeof(Foo).GetHashCode(), _mockContainer.RegisteredBinding.GetHashCode());
-        Assert.IsTrue(_mockContainer.RegisteredBinding.BindingLifeTime == BindingLifeTime.Transient);
+        Assert.AreNotEqual(typeof(Foo).GetHashCode(), retrievedBinding.GetHashCode());
+        Assert.IsTrue(retrievedBinding.BindingLifeTime == BindingLifeTime.Transient);
     }
     
     [Test]
@@ -51,10 +57,10 @@ public class BindingBuilderTests
     {
         Assert.Throws<ArgumentException>(() =>
         {
-            BindingBuilder bindingBuilderOne = new BindingBuilder(_mockContainer, typeof(Foo));
+            BindingBuilder<Foo> bindingBuilderOne = new BindingBuilder<Foo>(_mockContainer);
             bindingBuilderOne.AsSingle();
 
-            BindingBuilder bindingBuilderTwo = new BindingBuilder(_mockContainer, typeof(Foo));
+            BindingBuilder<Foo> bindingBuilderTwo = new BindingBuilder<Foo>(_mockContainer);
             bindingBuilderTwo.AsSingle();
         });
     }
@@ -62,29 +68,32 @@ public class BindingBuilderTests
     [Test]
     public void BindingBuilder_Binds_Interface_As_Singleton()
     {
-        BindingBuilder bindingBuilder = new BindingBuilder(_mockContainer, typeof(IBaz));
+        BindingBuilder<IBaz> bindingBuilder = new BindingBuilder<IBaz>(_mockContainer);
         bindingBuilder.To<BazImplementation>().AsSingle();
 
-        Assert.AreEqual(typeof(IBaz), _mockContainer.RegisteredBinding.BindingType);
-        Assert.AreEqual(typeof(BazImplementation), _mockContainer.RegisteredBinding.Instance.GetType());
-        Assert.AreEqual(typeof(BazImplementation), _mockContainer.RegisteredBinding.InstanceType);
+        _mockContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
+        
+        Assert.AreEqual(typeof(IBaz), retrievedBinding.BindingType);
+        Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
+        Assert.AreEqual(typeof(BazImplementation), retrievedBinding.InstanceType);
 
-        Assert.AreEqual(typeof(IBaz).GetHashCode(), _mockContainer.RegisteredBinding.GetHashCode());
-        Assert.IsTrue(_mockContainer.RegisteredBinding.BindingLifeTime == BindingLifeTime.Singular);
+        Assert.AreEqual(typeof(IBaz).GetHashCode(), retrievedBinding.GetHashCode());
+        Assert.IsTrue(retrievedBinding.BindingLifeTime == BindingLifeTime.Singular);
     }
     
     [Test]
     public void BindingBuilder_Binds_Interface_As_Transient()
     {
-        BindingBuilder bindingBuilder = new BindingBuilder(_mockContainer, typeof(IBaz));
+        var bindingBuilder = new BindingBuilder<IBaz>(_mockContainer);
         bindingBuilder.To<BazImplementation>().AsTransient();
 
-        Assert.AreEqual(typeof(IBaz), _mockContainer.RegisteredBinding.BindingType);
-        Assert.AreEqual(typeof(BazImplementation), _mockContainer.RegisteredBinding.Instance.GetType());
-        Assert.AreEqual(typeof(BazImplementation), _mockContainer.RegisteredBinding.InstanceType);
-
-        Assert.AreNotEqual(typeof(IBaz).GetHashCode(), _mockContainer.RegisteredBinding.GetHashCode());
-        Assert.IsTrue(_mockContainer.RegisteredBinding.BindingLifeTime == BindingLifeTime.Transient);
+        _mockContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
+        
+        Assert.AreEqual(typeof(IBaz), retrievedBinding.BindingType);
+        Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
+        Assert.AreEqual(typeof(BazImplementation), retrievedBinding.InstanceType);
+        Assert.AreNotEqual(typeof(IBaz).GetHashCode(), retrievedBinding.GetHashCode());
+        Assert.IsTrue(retrievedBinding.BindingLifeTime == BindingLifeTime.Transient);
     }
 
 }
