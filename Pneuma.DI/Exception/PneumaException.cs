@@ -2,8 +2,12 @@
 {
     public class PneumaException : System.Exception
     {
-        public PneumaException() { }
+        public PneumaException()
+        {
+        }
 
-        public PneumaException(string message) : base(message) { }
+        public PneumaException(string message) : base(message)
+        {
+        }
     }
 }

@@ -6,10 +6,10 @@ using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
 {
-    public sealed class Container : IContainer, IInjector ,IDisposable
+    public sealed class Container : IContainer, IInjector, IDisposable
     {
         private readonly Dictionary<int, Binding> _singletonRegistrations;
-        
+
         private readonly List<Binding> _transientRegistrations;
 
         private readonly List<IBindingBuilder> _lazyBindingBuilders;
@@ -21,7 +21,7 @@ namespace Pneuma.DI.Core
             _singletonRegistrations = new Dictionary<int, Binding>();
             _transientRegistrations = new List<Binding>();
             _lazyBindingBuilders = new List<IBindingBuilder>();
-            
+
             _isValid = true;
         }
 
@@ -48,7 +48,7 @@ namespace Pneuma.DI.Core
                 binding = _singletonRegistrations[lookupTypeHashCode];
                 return true;
             }
-            
+
             for (int index = 0; index < _transientRegistrations.Count; index++)
             {
                 Binding transientBinding = _transientRegistrations[index];
@@ -58,10 +58,11 @@ namespace Pneuma.DI.Core
                 {
                     continue;
                 }
-                
+
                 binding = transientBinding;
                 return true;
             }
+
             return false;
         }
 
@@ -77,7 +78,8 @@ namespace Pneuma.DI.Core
                     return true;
                 default:
                     _isValid = false;
-                    throw new PneumaException("Unable to register binding! Please specify valid lifetime for the binding");
+                    throw new PneumaException(
+                        "Unable to register binding! Please specify valid lifetime for the binding");
             }
         }
 
@@ -109,6 +111,7 @@ namespace Pneuma.DI.Core
         {
             _singletonRegistrations.Clear();
             _transientRegistrations.Clear();
+            _lazyBindingBuilders.Clear();
         }
     }
 }

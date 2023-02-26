@@ -7,7 +7,7 @@ namespace Pneuma.DI.Core
     public interface IContainer
     {
         bool ContainerBindingLookup(Type lookupType, out Binding binding);
-        
+
         bool RegisterBinding(Binding binding, BindingLifeTime bindingLifeTime);
 
         bool RegisterLazyBinding<TBinding>(BindingBuilder<TBinding> bindingBuilder);

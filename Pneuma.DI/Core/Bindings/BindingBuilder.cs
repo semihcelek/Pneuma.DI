@@ -10,13 +10,13 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
     private readonly IContainer _container;
 
     private Type _specifiedConcreteType;
-    
+
     private object _activatedObject;
-    
+
     private BindingLifeTime _bindingLifeTime;
-    
+
     private RegistrationTime _registrationTime;
-    
+
     public BindingBuilder(IContainer container)
     {
         _container = container;
@@ -70,11 +70,11 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
         Type concreteType = RetrieveConcreteType<T>();
         _activatedObject = constructorInjector.InjectAndActivateType(concreteType);
     }
-    
+
     private Type RetrieveConcreteType<T>()
     {
         Type buildingType = typeof(T);
-        
+
         if (buildingType.IsAbstract || buildingType.IsInterface)
         {
             return _specifiedConcreteType == null
@@ -82,7 +82,7 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
                     "Unable to bind abstract/interface type because concrete type is not specified!")
                 : _specifiedConcreteType;
         }
-        
+
         return buildingType;
     }
 
