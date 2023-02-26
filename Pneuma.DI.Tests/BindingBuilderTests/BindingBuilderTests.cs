@@ -22,7 +22,7 @@ public class BindingBuilderTests
     {
         BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_mockContainer);
 
-        bindingBuilder.AsSingle();
+        bindingBuilder.AsSingle().NonLazy();
 
         _mockContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
         
@@ -40,7 +40,7 @@ public class BindingBuilderTests
         
         BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_mockContainer);
 
-        bindingBuilder.AsTransient();
+        bindingBuilder.AsTransient().NonLazy();
 
         _mockContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
 
@@ -58,10 +58,10 @@ public class BindingBuilderTests
         Assert.Throws<ArgumentException>(() =>
         {
             BindingBuilder<Foo> bindingBuilderOne = new BindingBuilder<Foo>(_mockContainer);
-            bindingBuilderOne.AsSingle();
+            bindingBuilderOne.AsSingle().NonLazy();
 
             BindingBuilder<Foo> bindingBuilderTwo = new BindingBuilder<Foo>(_mockContainer);
-            bindingBuilderTwo.AsSingle();
+            bindingBuilderTwo.AsSingle().NonLazy();
         });
     }
         
@@ -69,7 +69,7 @@ public class BindingBuilderTests
     public void BindingBuilder_Binds_Interface_As_Singleton()
     {
         BindingBuilder<IBaz> bindingBuilder = new BindingBuilder<IBaz>(_mockContainer);
-        bindingBuilder.To<BazImplementation>().AsSingle();
+        bindingBuilder.To<BazImplementation>().AsSingle().NonLazy();
 
         _mockContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
@@ -85,7 +85,7 @@ public class BindingBuilderTests
     public void BindingBuilder_Binds_Interface_As_Transient()
     {
         var bindingBuilder = new BindingBuilder<IBaz>(_mockContainer);
-        bindingBuilder.To<BazImplementation>().AsTransient();
+        bindingBuilder.To<BazImplementation>().AsTransient().NonLazy();
 
         _mockContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
@@ -101,7 +101,7 @@ public class BindingBuilderTests
     public void BindingBuilder_Binds_Lazy()
     {
         var bindingBuilder = new BindingBuilder<IBaz>(_mockContainer);
-        bindingBuilder.To<BazImplementation>().AsTransient().Lazy();
+        bindingBuilder.To<BazImplementation>().AsTransient().NonLazy();
 
         _mockContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         

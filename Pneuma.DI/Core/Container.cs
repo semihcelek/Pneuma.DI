@@ -12,23 +12,26 @@ namespace Pneuma.DI.Core
         
         private readonly List<Binding> _transientRegistrations;
 
+        private readonly List<IBindingBuilder> _lazyBindingBuilders;
+
         private bool _isValid;
 
         public Container()
         {
             _singletonRegistrations = new Dictionary<int, Binding>();
             _transientRegistrations = new List<Binding>();
+            _lazyBindingBuilders = new List<IBindingBuilder>();
             
             _isValid = true;
         }
 
-        public BindingBuilder<T> Bind<T>()
+        public IBindingBuilder<T> Bind<T>()
         {
             SanityCheck();
             return new BindingBuilder<T>(this);
         }
 
-        public BindingBuilder<T> BindInterface<T>()
+        public IBindingBuilder<T> BindInterface<T>()
         {
             SanityCheck();
             return new BindingBuilder<T>(this);
@@ -76,6 +79,17 @@ namespace Pneuma.DI.Core
                     _isValid = false;
                     throw new PneumaException("Unable to register binding! Please specify valid lifetime for the binding");
             }
+        }
+
+        public bool RegisterLazyBinding<TBinding>(BindingBuilder<TBinding> bindingBuilder)
+        {
+            if (!_lazyBindingBuilders.Contains(bindingBuilder))
+            {
+                _lazyBindingBuilders.Add(bindingBuilder);
+                return true;
+            }
+
+            return false;
         }
 
         private void SanityCheck()
