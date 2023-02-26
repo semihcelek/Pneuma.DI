@@ -1,4 +1,5 @@
-﻿using Pneuma.DI.Core;
+﻿using System;
+using Pneuma.DI.Core;
 using Pneuma.DI.Tests.Examples;
 using Pneuma.Sandbox.BazModule.Controller;
 
@@ -21,10 +22,10 @@ namespace Pneuma.Sandbox
 
             diContainer.Bind<BazController>().AsSingle().NonLazy();
             
-            // diContainer.Bind<Foo>().AsTransient().Lazy();
-            // diContainer.Bind<Foo>().AsTransient().Lazy();
-            // diContainer.Bind<Foo>().AsTransient().Lazy();
-            // diContainer.Bind<Foo>().AsTransient().Lazy();
+            diContainer.Bind<Foo>().AsTransient().Lazy();
+            diContainer.Bind<Foo>().AsTransient().Lazy();
+            diContainer.Bind<Foo>().AsTransient().Lazy();
+            diContainer.Bind<Foo>().AsTransient().Lazy();
         }
     }
 }

@@ -9,8 +9,8 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
 {
     private readonly IContainer _container;
 
-    public readonly Type BuildingType = typeof(TBinding);
-
+    public  Type BuildingType => typeof(TBinding);
+    
     private Type _specifiedConcreteType;
 
     private object _activatedObject;
@@ -65,7 +65,7 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
         InjectDependencies<TBinding>();
 
         Binding binding = new Binding(_activatedObject,
-            _specifiedConcreteType ?? BuildingType, _activatedObject.GetType(),
+            BuildingType, _activatedObject.GetType(),
             BindingLifeTime);
         return binding;
     }

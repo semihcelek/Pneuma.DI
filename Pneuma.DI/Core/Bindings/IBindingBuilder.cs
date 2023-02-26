@@ -10,4 +10,6 @@ public interface IBindingBuilder<TBinding> : ILifeTimeBuilder<TBinding>, IBindin
 public interface IBindingBuilder
 {
     Binding BuildBinding();
+    
+    Type BuildingType { get; }
 }

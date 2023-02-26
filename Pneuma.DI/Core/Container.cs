@@ -69,7 +69,7 @@ namespace Pneuma.DI.Core
             for (int index = 0; index < _lazyBindingBuilders.Count; index++)
             {
                 IBindingBuilder bindingBuilder = _lazyBindingBuilders[index];
-                if (bindingBuilder.GetHashCode() != lookupTypeHashCode)
+                if (bindingBuilder.BuildingType.GetHashCode() != lookupTypeHashCode)
                 {
                     continue;
                 }
@@ -100,14 +100,12 @@ namespace Pneuma.DI.Core
 
         public bool RegisterLazyBinding<TBinding>(BindingBuilder<TBinding> bindingBuilder)
         {
-            // if (!_lazyBindingBuilders.Contains(bindingBuilder))
-            // {
-            //     return true;
-            // }
-            Console.WriteLine("helloo");
-            _lazyBindingBuilders.Add(bindingBuilder);
+            if (!_lazyBindingBuilders.Contains(bindingBuilder))
+            {
+                _lazyBindingBuilders.Add(bindingBuilder);
+                return true;
+            }
 
-            
             return false;
         }
 
