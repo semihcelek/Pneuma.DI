@@ -68,6 +68,17 @@ namespace Pneuma.DI.Tests.ContainerTests
             
             Assert.AreEqual(4, _container.GetActiveObjectCount());
         }
+        
+        [Test]
+        public void Bind_Same_Dependency_As_Transient_Lazy()
+        {
+            _container.Bind<Foo>().AsTransient().Lazy();
+            _container.Bind<Foo>().AsTransient().Lazy();
+            _container.Bind<Foo>().AsTransient().Lazy();
+            _container.Bind<Foo>().AsTransient().Lazy();
+            
+            Assert.AreEqual(0, _container.GetActiveObjectCount());
+        }
 
         [Test]
         public void Bind_Interface_To_Implementation()

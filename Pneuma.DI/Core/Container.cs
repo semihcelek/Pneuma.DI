@@ -100,12 +100,14 @@ namespace Pneuma.DI.Core
 
         public bool RegisterLazyBinding<TBinding>(BindingBuilder<TBinding> bindingBuilder)
         {
-            if (!_lazyBindingBuilders.Contains(bindingBuilder))
-            {
-                _lazyBindingBuilders.Add(bindingBuilder);
-                return true;
-            }
+            // if (!_lazyBindingBuilders.Contains(bindingBuilder))
+            // {
+            //     return true;
+            // }
+            Console.WriteLine("helloo");
+            _lazyBindingBuilders.Add(bindingBuilder);
 
+            
             return false;
         }
 

@@ -7,7 +7,7 @@ public interface IBindingBuilder<TBinding> : ILifeTimeBuilder<TBinding>, IBindin
 {
 }
 
-public interface IBindingBuilder : IEquatable<IBindingBuilder>
+public interface IBindingBuilder
 {
     Binding BuildBinding();
 }

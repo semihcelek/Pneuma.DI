@@ -9,13 +9,13 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
 {
     private readonly IContainer _container;
 
-    private readonly Type _buildingType = typeof(TBinding);
+    public readonly Type BuildingType = typeof(TBinding);
 
     private Type _specifiedConcreteType;
 
     private object _activatedObject;
 
-    private BindingLifeTime _bindingLifeTime;
+    public BindingLifeTime BindingLifeTime;
 
     private RegistrationTime _registrationTime;
 
@@ -33,14 +33,14 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
 
     public IBindingActivator<TBinding> AsSingle()
     {
-        _bindingLifeTime = BindingLifeTime.Singular;
+        BindingLifeTime = BindingLifeTime.Singular;
 
         return this;
     }
 
     public IBindingActivator<TBinding> AsTransient()
     {
-        _bindingLifeTime = BindingLifeTime.Transient;
+        BindingLifeTime = BindingLifeTime.Transient;
 
         return this;
     }
@@ -53,15 +53,16 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
     public void NonLazy()
     {
         Binding binding = ActivateBinding();
-        _container.RegisterBinding(binding, _bindingLifeTime);
+        _container.RegisterBinding(binding, BindingLifeTime);
     }
 
     private Binding ActivateBinding()
     {
         InjectDependencies<TBinding>();
 
-        Binding binding = new Binding(_activatedObject, typeof(TBinding), _activatedObject.GetType(),
-            _bindingLifeTime);
+        Binding binding = new Binding(_activatedObject,
+            _specifiedConcreteType ?? BuildingType, _activatedObject.GetType(),
+            BindingLifeTime);
         return binding;
     }
 
@@ -94,25 +95,5 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
         _container.RegisterBinding(activatedBinding, activatedBinding.BindingLifeTime);
         
         return activatedBinding;
-    }
-
-    public bool Equals(BindingBuilder<TBinding> other)
-    {
-        return Equals(_buildingType, other._buildingType);
-    }
-
-    public bool Equals(IBindingBuilder other)
-    {
-        return other != null && _buildingType.GetHashCode() == other.GetHashCode();
-    }
-
-    public override bool Equals(object obj)
-    {
-        return obj is BindingBuilder<TBinding> other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        return (_buildingType != null ? _buildingType.GetHashCode() : 0);
     }
 }
