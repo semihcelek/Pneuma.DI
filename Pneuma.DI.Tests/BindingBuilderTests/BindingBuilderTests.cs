@@ -112,4 +112,10 @@ public class BindingBuilderTests
         Assert.AreNotEqual(typeof(IBaz).GetHashCode(), retrievedBinding.GetHashCode());
         Assert.IsTrue(retrievedBinding.BindingLifeTime == BindingLifeTime.Transient);
     }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _mockContainer.Dispose();
+    }
 }

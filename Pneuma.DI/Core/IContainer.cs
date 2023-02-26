@@ -4,7 +4,7 @@ using Pneuma.DI.Core.Bindings;
 
 namespace Pneuma.DI.Core
 {
-    public interface IContainer
+    public interface IContainer : IDisposable
     {
         bool ContainerBindingLookup(Type lookupType, out Binding binding);
 
