@@ -22,6 +22,10 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
     public BindingBuilder(IContainer container)
     {
         _container = container;
+        _specifiedConcreteType = null;
+        _activatedObject = null;
+        BindingLifeTime = BindingLifeTime.Unspecified;
+        _registrationTime = RegistrationTime.Unspecified;
     }
 
     public IBindingBuilder<TBinding> To<TConcrete>() where TConcrete : TBinding
