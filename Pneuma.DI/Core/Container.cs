@@ -66,7 +66,7 @@ namespace Pneuma.DI.Core
                 return false;
             }
 
-            for (int index = 0; index < _lazyBindingBuilders.Count; index++)
+            for (int index = _lazyBindingBuilders.Count - 1; index >= 0; index--)
             {
                 IBindingBuilder bindingBuilder = _lazyBindingBuilders[index];
                 if (bindingBuilder.BuildingType.GetHashCode() != lookupTypeHashCode)
@@ -75,6 +75,7 @@ namespace Pneuma.DI.Core
                 }
 
                 binding = bindingBuilder.BuildBinding();
+                _lazyBindingBuilders.RemoveAt(index);
                 return true;
             }
 
@@ -100,13 +101,8 @@ namespace Pneuma.DI.Core
 
         public bool RegisterLazyBinding<TBinding>(BindingBuilder<TBinding> bindingBuilder)
         {
-            if (!_lazyBindingBuilders.Contains(bindingBuilder))
-            {
-                _lazyBindingBuilders.Add(bindingBuilder);
-                return true;
-            }
-
-            return false;
+            _lazyBindingBuilders.Add(bindingBuilder);
+            return true;
         }
 
         private void SanityCheck()

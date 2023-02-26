@@ -100,4 +100,34 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
         
         return activatedBinding;
     }
+
+    public bool Equals(BindingBuilder<TBinding> other)
+    {
+        return Equals(_container, other._container) && Equals(_specifiedConcreteType, other._specifiedConcreteType) &&
+               Equals(_activatedObject, other._activatedObject) && BindingLifeTime == other.BindingLifeTime &&
+               _registrationTime == other._registrationTime;
+    }
+
+    public bool Equals(IBindingBuilder other)
+    {
+        return Equals(this, other);
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is BindingBuilder<TBinding> other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        unchecked
+        {
+            var hashCode = (_container != null ? _container.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (_specifiedConcreteType != null ? _specifiedConcreteType.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (_activatedObject != null ? _activatedObject.GetHashCode() : 0);
+            hashCode = (hashCode * 397) ^ (int)BindingLifeTime;
+            hashCode = (hashCode * 397) ^ (int)_registrationTime;
+            return hashCode;
+        }
+    }
 }
