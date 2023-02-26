@@ -51,7 +51,7 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
     public void NonLazy()
     {
         Binding binding = ActivateBinding();
-        _container.RegisterBinding(binding, BindingLifeTime.Transient);
+        _container.RegisterBinding(binding, _bindingLifeTime);
     }
 
     private Binding ActivateBinding()
@@ -59,7 +59,7 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
         InjectDependencies<TBinding>();
 
         Binding binding = new Binding(_activatedObject, typeof(TBinding), _activatedObject.GetType(),
-            BindingLifeTime.Transient);
+            _bindingLifeTime);
         return binding;
     }
 
