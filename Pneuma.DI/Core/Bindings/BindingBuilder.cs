@@ -75,7 +75,9 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
         using ConstructorInjector constructorInjector = ConstructorInjector.Create(_container);
 
         Type concreteType = RetrieveConcreteType<T>();
-        _activatedObject = constructorInjector.InjectAndActivateType(concreteType);
+        
+        constructorInjector.TryInjectToConstructor<T>(out T activatedObject);
+        _activatedObject = activatedObject;
     }
 
     private Type RetrieveConcreteType<T>()

@@ -19,16 +19,20 @@ namespace Pneuma.DI.Core.Injectors
             return new ConstructorInjector(container);
         }
 
-        public object InjectAndActivateType(Type buildingType)
+        public bool TryInjectToConstructor<TBinding>(out TBinding injectedObject)
         {
-            ConstructorInfo constructorInfo = GetPublicNonStaticConstructor(buildingType);
+            injectedObject = default;
+
+            Type buildingType = typeof(TBinding);
             
+            ConstructorInfo constructorInfo = GetPublicNonStaticConstructor(buildingType);
             ParameterInfo[] parameterInfos = constructorInfo.GetParameters();
             
             int parameterCount = parameterInfos.Length;
             if (parameterCount <= 0)
             {
-                return BindParameterlessType(buildingType);
+                injectedObject = BindParameterlessType<TBinding>();
+                return true;
             }
             
             object[] injectParameters = new object[parameterCount];
@@ -47,8 +51,8 @@ namespace Pneuma.DI.Core.Injectors
                 injectParameters[index] = binding.Instance;
             }
             
-            object instance = Activator.CreateInstance(buildingType, injectParameters);
-            return instance;
+            injectedObject = (TBinding)Activator.CreateInstance(buildingType, injectParameters);
+            return true;
         }
                 
         private static ConstructorInfo GetPublicNonStaticConstructor(Type type)
@@ -64,9 +68,9 @@ namespace Pneuma.DI.Core.Injectors
             return constructorInfo;
         }
         
-        private object BindParameterlessType(Type type)
+        private T BindParameterlessType<T>()
         {
-            object instance = Activator.CreateInstance(type);
+            T instance = Activator.CreateInstance<T>();
             return instance;
         }
 
