@@ -9,6 +9,8 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
 {
     private readonly IContainer _container;
 
+    private readonly Type _buildingType = typeof(TBinding);
+
     private Type _specifiedConcreteType;
 
     private object _activatedObject;
@@ -88,6 +90,29 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
 
     public Binding BuildBinding()
     {
-        return ActivateBinding();
+        Binding activatedBinding = ActivateBinding();
+        _container.RegisterBinding(activatedBinding, activatedBinding.BindingLifeTime);
+        
+        return activatedBinding;
+    }
+
+    public bool Equals(BindingBuilder<TBinding> other)
+    {
+        return Equals(_buildingType, other._buildingType);
+    }
+
+    public bool Equals(IBindingBuilder other)
+    {
+        return other != null && _buildingType.GetHashCode() == other.GetHashCode();
+    }
+
+    public override bool Equals(object obj)
+    {
+        return obj is BindingBuilder<TBinding> other && Equals(other);
+    }
+
+    public override int GetHashCode()
+    {
+        return (_buildingType != null ? _buildingType.GetHashCode() : 0);
     }
 }

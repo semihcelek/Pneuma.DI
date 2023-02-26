@@ -9,22 +9,22 @@ namespace Pneuma.DI.Tests.BindingBuilderTests;
 
 public class BindingBuilderTests
 {
-    private IContainer _mockContainer; 
+    private Container _container; 
     
     [SetUp]
     public void Setup()
     {
-        _mockContainer = new Container();
+        _container = new Container();
     }
     
     [Test]
     public void BindingBuilder_Binds_Singleton()
     {
-        BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_mockContainer);
+        BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_container);
 
         bindingBuilder.AsSingle().NonLazy();
 
-        _mockContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
+        _container.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
         
         Assert.AreEqual(typeof(Foo), retrievedBinding.BindingType);
         Assert.AreEqual(typeof(Foo), retrievedBinding.Instance.GetType());
@@ -38,11 +38,11 @@ public class BindingBuilderTests
     public void BindingBuilder_Binds_Transient()
     {
         
-        BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_mockContainer);
+        BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_container);
 
         bindingBuilder.AsTransient().NonLazy();
 
-        _mockContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
+        _container.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
 
         Assert.AreEqual(typeof(Foo), retrievedBinding.BindingType);
         Assert.AreEqual(typeof(Foo), retrievedBinding.Instance.GetType());
@@ -57,10 +57,10 @@ public class BindingBuilderTests
     {
         Assert.Throws<ArgumentException>(() =>
         {
-            BindingBuilder<Foo> bindingBuilderOne = new BindingBuilder<Foo>(_mockContainer);
+            BindingBuilder<Foo> bindingBuilderOne = new BindingBuilder<Foo>(_container);
             bindingBuilderOne.AsSingle().NonLazy();
 
-            BindingBuilder<Foo> bindingBuilderTwo = new BindingBuilder<Foo>(_mockContainer);
+            BindingBuilder<Foo> bindingBuilderTwo = new BindingBuilder<Foo>(_container);
             bindingBuilderTwo.AsSingle().NonLazy();
         });
     }
@@ -68,10 +68,10 @@ public class BindingBuilderTests
     [Test]
     public void BindingBuilder_Binds_Interface_As_Singleton()
     {
-        BindingBuilder<IBaz> bindingBuilder = new BindingBuilder<IBaz>(_mockContainer);
+        BindingBuilder<IBaz> bindingBuilder = new BindingBuilder<IBaz>(_container);
         bindingBuilder.To<BazImplementation>().AsSingle().NonLazy();
 
-        _mockContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
+        _container.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
         Assert.AreEqual(typeof(IBaz), retrievedBinding.BindingType);
         Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
@@ -84,10 +84,10 @@ public class BindingBuilderTests
     [Test]
     public void BindingBuilder_Binds_Interface_As_Transient()
     {
-        var bindingBuilder = new BindingBuilder<IBaz>(_mockContainer);
+        var bindingBuilder = new BindingBuilder<IBaz>(_container);
         bindingBuilder.To<BazImplementation>().AsTransient().NonLazy();
 
-        _mockContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
+        _container.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
         Assert.AreEqual(typeof(IBaz), retrievedBinding.BindingType);
         Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
@@ -98,24 +98,47 @@ public class BindingBuilderTests
     }
     
     [Test]
-    public void BindingBuilder_Binds_Lazy()
+    public void BindingBuilder_Binds_Lazy_Not_Registered_Container()
     {
-        var bindingBuilder = new BindingBuilder<IBaz>(_mockContainer);
-        bindingBuilder.To<BazImplementation>().AsTransient().NonLazy();
+        var bindingBuilder = new BindingBuilder<IBaz>(_container);
+        bindingBuilder.To<BazImplementation>().AsTransient().Lazy();
 
-        _mockContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
+        bool isRegistered = _container.ContainerBindingLookup(typeof(IBaz), out Binding _, false);
         
-        Assert.AreEqual(typeof(IBaz), retrievedBinding.BindingType);
-        Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
-        Assert.AreEqual(typeof(BazImplementation), retrievedBinding.InstanceType);
+        Assert.IsFalse(isRegistered);
+    }
+
+    [Test]
+    public void BindingBuilder_Binds_Lazy_And_Activates_When_Required()
+    {
+        var bindingBuilder = new BindingBuilder<Foo>(_container);
+        bindingBuilder.AsTransient().Lazy();
+
+        _container.Bind<Bar>().AsTransient().NonLazy();
         
-        Assert.AreNotEqual(typeof(IBaz).GetHashCode(), retrievedBinding.GetHashCode());
-        Assert.IsTrue(retrievedBinding.BindingLifeTime == BindingLifeTime.Transient);
+        bool isRegistered = _container.ContainerBindingLookup(typeof(Foo), out Binding _);
+        
+        Assert.IsTrue(isRegistered);
+    }
+
+    [Test]
+    public void BindingBuilder_Doesnt_Binds_Lazy()
+    {
+        var bindingBuilder = new BindingBuilder<Foo>(_container);
+        bindingBuilder.AsTransient().Lazy();
+
+        _container.Bind<Foo>().AsSingle().Lazy();
+        
+        bool isFooRegistered = _container.ContainerBindingLookup(typeof(Foo), out Binding _, false);
+        bool isBarRegistered = _container.ContainerBindingLookup(typeof(Bar), out Binding _, false);
+        
+        Assert.IsFalse(isFooRegistered);
+        Assert.IsFalse(isBarRegistered);
     }
 
     [TearDown]
     public void TearDown()
     {
-        _mockContainer.Dispose();
+        _container.Dispose();
     }
 }

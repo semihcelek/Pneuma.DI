@@ -6,7 +6,7 @@ namespace Pneuma.DI.Core
 {
     public interface IContainer : IDisposable
     {
-        bool ContainerBindingLookup(Type lookupType, out Binding binding);
+        bool ContainerBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings = true);
 
         bool RegisterBinding(Binding binding, BindingLifeTime bindingLifeTime);
 

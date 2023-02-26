@@ -37,12 +37,11 @@ namespace Pneuma.DI.Core
             return new BindingBuilder<T>(this);
         }
 
-        public bool ContainerBindingLookup(Type lookupType, out Binding binding)
+        public bool ContainerBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings = true)
         {
             binding = default;
 
             int lookupTypeHashCode = lookupType.GetHashCode();
-
             if (_singletonRegistrations.ContainsKey(lookupTypeHashCode))
             {
                 binding = _singletonRegistrations[lookupTypeHashCode];
@@ -52,7 +51,6 @@ namespace Pneuma.DI.Core
             for (int index = 0; index < _transientRegistrations.Count; index++)
             {
                 Binding transientBinding = _transientRegistrations[index];
-
                 int bindingTypeHashCode = transientBinding.BindingType.GetHashCode();
                 if (bindingTypeHashCode != lookupTypeHashCode)
                 {
@@ -60,6 +58,23 @@ namespace Pneuma.DI.Core
                 }
 
                 binding = transientBinding;
+                return true;
+            }
+
+            if (!bindAvailableLazyBindings)
+            {
+                return false;
+            }
+
+            for (int index = 0; index < _lazyBindingBuilders.Count; index++)
+            {
+                IBindingBuilder bindingBuilder = _lazyBindingBuilders[index];
+                if (bindingBuilder.GetHashCode() != lookupTypeHashCode)
+                {
+                    continue;
+                }
+
+                binding = bindingBuilder.BuildBinding();
                 return true;
             }
 
