@@ -1,6 +1,7 @@
-﻿namespace Pneuma.DI.Core.Bindings;
-
-public interface IAbstractBinder<TBinding>
+﻿namespace Pneuma.DI.Core.Bindings
 {
-    IBindingBuilder<TBinding> To<TConcrete>() where TConcrete : TBinding;
+    public interface IAbstractBinder<TBinding>
+    {
+        IBindingBuilder<TBinding> To<TConcrete>() where TConcrete : TBinding;
+    }
 }

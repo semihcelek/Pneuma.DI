@@ -1,20 +1,21 @@
 ﻿using System;
 using Pneuma.DI.Exception;
 
-namespace Pneuma.DI.Utility;
-
-public static class ConcreteTypeHelper
+namespace Pneuma.DI.Utility
 {
-    public static Type RetrieveConcreteType<TBinding, TConcrete>() where TConcrete : TBinding
+    public static class ConcreteTypeHelper
     {
-        Type buildingType = typeof(TBinding);
-
-        if (buildingType.IsAbstract || buildingType.IsInterface)
+        public static Type RetrieveConcreteType<TBinding, TConcrete>() where TConcrete : TBinding
         {
-            return typeof(TConcrete);
+            Type buildingType = typeof(TBinding);
+
+            if (buildingType.IsAbstract || buildingType.IsInterface)
+            {
+                return typeof(TConcrete);
+            }
+
+            return buildingType;
         }
 
-        return buildingType;
     }
-
 }

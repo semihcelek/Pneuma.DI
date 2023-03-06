@@ -1,6 +1,7 @@
-﻿namespace Pneuma.DI.Core.Injectors;
-
-public struct AttributeInjector
+﻿namespace Pneuma.DI.Core.Injectors
 {
-    private readonly IContainer _container;
+    public struct AttributeInjector
+    {
+        private readonly IContainer _container;
+    }
 }

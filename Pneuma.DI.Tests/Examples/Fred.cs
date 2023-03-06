@@ -1,15 +1,16 @@
 ﻿using System;
 using Pneuma.DI.Core.Attributes;
 
-namespace Pneuma.DI.Tests.Examples;
-
-public class Fred
+namespace Pneuma.DI.Tests.Examples
 {
-    [Inject]
-    private IBaz _baz;
-
-    public void DoBaz()
+    public class Fred
     {
-        Console.WriteLine(_baz.Fizz);
+        [Inject]
+        private IBaz _baz;
+
+        public void DoBaz()
+        {
+            Console.WriteLine(_baz.Fizz);
+        }
     }
 }

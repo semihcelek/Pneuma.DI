@@ -1,16 +1,17 @@
 ﻿using System;
 
-namespace Pneuma.DI.Core.Bindings;
-
-public interface IBindingBuilder<TBinding> : ILifeTimeBuilder<TBinding>, IBindingActivator<TBinding>,
-    IAbstractBinder<TBinding>, IBindingBuilder
+namespace Pneuma.DI.Core.Bindings
 {
-     void AddInterface(Type bindingInterface);
-}
+    public interface IBindingBuilder<TBinding> : ILifeTimeBuilder<TBinding>, IBindingActivator<TBinding>,
+        IAbstractBinder<TBinding>, IBindingBuilder
+    {
+        void AddInterface(Type bindingInterface);
+    }
 
-public interface IBindingBuilder : IEquatable<IBindingBuilder>
-{
-    Binding BuildBinding();
+    public interface IBindingBuilder : IEquatable<IBindingBuilder>
+    {
+        Binding BuildBinding();
     
-    Type BuildingType { get; }
+        Type BuildingType { get; }
+    }
 }

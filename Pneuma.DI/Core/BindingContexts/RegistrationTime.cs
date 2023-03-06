@@ -1,8 +1,9 @@
-﻿namespace Pneuma.DI.Core.BindingContexts;
-
-public enum RegistrationTime
+﻿namespace Pneuma.DI.Core.BindingContexts
 {
-    Unspecified,
-    InstantRegistration,
-    LazyRegistration
+    public enum RegistrationTime
+    {
+        Unspecified,
+        InstantRegistration,
+        LazyRegistration
+    }
 }

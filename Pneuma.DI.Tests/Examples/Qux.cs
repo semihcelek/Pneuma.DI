@@ -1,11 +1,12 @@
-﻿namespace Pneuma.DI.Tests.Examples;
-
-public class Qux
+﻿namespace Pneuma.DI.Tests.Examples
 {
-    private IBaz _baz;
-
-    public Qux(IBaz baz)
+    public class Qux
     {
-        _baz = baz;
+        private IBaz _baz;
+
+        public Qux(IBaz baz)
+        {
+            _baz = baz;
+        }
     }
 }
