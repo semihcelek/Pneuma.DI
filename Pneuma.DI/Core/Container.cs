@@ -81,7 +81,7 @@ namespace Pneuma.DI.Core
             switch (bindingLifeTime)
             {
                 case BindingLifeTime.Singular:
-                    _singletonRegistrations.Add(binding.GetHashCode(), binding);
+                    _singletonRegistrations.Add(binding.BindingType.GetHashCode(), binding);
                     return true;
                 case BindingLifeTime.Transient:
                     _transientRegistrations.Add(binding);

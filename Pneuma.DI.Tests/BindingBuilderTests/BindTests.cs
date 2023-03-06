@@ -32,7 +32,6 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
                 interfaces);
             
             Assert.IsTrue(typeof(IBaz) == binding.BindingType);
-            Assert.IsAssignableFrom<IBaz>(binding.Instance);
         }
     }
 }

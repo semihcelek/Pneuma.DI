@@ -14,7 +14,8 @@ namespace Pneuma.DI.Core.Bindings
 
         public readonly BindingLifeTime BindingLifeTime;
 
-        public Binding(object instance, Type bindingType, Type instanceType, BindingLifeTime bindingLifeTime, Type[] bindedInterfaces)
+        public Binding(object instance, Type bindingType, Type instanceType, BindingLifeTime bindingLifeTime,
+            Type[] bindedInterfaces)
         {
             Instance = instance;
             BindingType = bindingType;
