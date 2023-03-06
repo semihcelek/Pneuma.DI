@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Pneuma.DI.Core;
+using Pneuma.DI.Core.Extensions;
 using Pneuma.DI.Exception;
 using Pneuma.DI.Tests.Examples;
 
@@ -95,6 +96,7 @@ namespace Pneuma.DI.Tests.ContainerTests
             _container.BindInterface<IBaz>().To<BazImplementation>().AsTransient().NonLazy();
             _container.Bind<IBaz>().To<BazImplementation>().AsTransient().NonLazy();
             _container.Bind<IBaz>().To<BazImplementation>().AsTransient().NonLazy();
+            _container.Bind<BazImplementation, IBaz>().AsSingle();
             
             Assert.AreEqual(4, _container.GetActiveObjectCount());
         }

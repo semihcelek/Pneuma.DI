@@ -2,6 +2,7 @@
 using Pneuma.DI.Core.BindingContexts;
 using Pneuma.DI.Core.Injectors;
 using Pneuma.DI.Exception;
+using Pneuma.DI.Utility;
 
 namespace Pneuma.DI.Core.Bindings;
 
@@ -11,7 +12,7 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
 
     public  Type BuildingType => typeof(TBinding);
     
-    private Type _specifiedConcreteType;
+    private TBinding _specifiedConcreteType;
 
     private object _activatedObject;
 
@@ -22,7 +23,6 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
     public BindingBuilder(IContainer container)
     {
         _container = container;
-        _specifiedConcreteType = null;
         _activatedObject = null;
         BindingLifeTime = BindingLifeTime.Unspecified;
         _registrationTime = RegistrationTime.Unspecified;
@@ -30,7 +30,7 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
 
     public IBindingBuilder<TBinding> To<TConcrete>() where TConcrete : TBinding
     {
-        _specifiedConcreteType = typeof(TConcrete);
+        _specifiedConcreteType = default(TConcrete);
 
         return this;
     }
@@ -66,34 +66,18 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
 
         Binding binding = new Binding(_activatedObject,
             BuildingType, _activatedObject.GetType(),
-            BindingLifeTime);
+            BindingLifeTime, Array.Empty<Type>());
         return binding;
     }
 
     private void InjectDependencies<T>()
     {
         using ConstructorInjector constructorInjector = ConstructorInjector.Create(_container);
-
-        Type concreteType = RetrieveConcreteType<T>();
         
-        constructorInjector.TryInjectToConstructor<T>(out T activatedObject);
+        constructorInjector.InjectToConstructor<T>(out T activatedObject);
         _activatedObject = activatedObject;
     }
 
-    private Type RetrieveConcreteType<T>()
-    {
-        Type buildingType = typeof(T);
-
-        if (buildingType.IsAbstract || buildingType.IsInterface)
-        {
-            return _specifiedConcreteType == null
-                ? throw new BindingFailedException(
-                    "Unable to bind abstract/interface type because concrete type is not specified!")
-                : _specifiedConcreteType;
-        }
-
-        return buildingType;
-    }
 
     public Binding BuildBinding()
     {

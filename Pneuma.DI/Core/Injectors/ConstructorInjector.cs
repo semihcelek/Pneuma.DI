@@ -19,7 +19,17 @@ namespace Pneuma.DI.Core.Injectors
             return new ConstructorInjector(container);
         }
 
-        public bool TryInjectToConstructor<TBinding>(out TBinding injectedObject)
+        public bool InjectToConstructor<TBinding, TConcrete>(out TConcrete injectedObject) where TConcrete : TBinding
+        {
+            return InjectToConstructorInternal(out injectedObject);
+        }
+
+        public bool InjectToConstructor<TBinding>(out TBinding injectedObject)
+        {
+            return InjectToConstructorInternal(out injectedObject);
+        }
+
+        private bool InjectToConstructorInternal<TBinding>(out TBinding injectedObject)
         {
             injectedObject = default;
 

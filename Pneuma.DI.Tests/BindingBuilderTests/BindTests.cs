@@ -13,7 +13,8 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         {
             Foo fooInstance = new Foo();
             Type bindingType = fooInstance.GetType();
-            Binding binding = new Binding(fooInstance, bindingType, bindingType, BindingLifeTime.Singular);
+            Binding binding = new Binding(fooInstance, bindingType, bindingType, BindingLifeTime.Singular,
+                Array.Empty<Type>());
             
             Assert.IsTrue(typeof(Foo) == binding.BindingType);
             Assert.IsAssignableFrom<Foo>(binding.Instance);

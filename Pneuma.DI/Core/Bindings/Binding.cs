@@ -10,14 +10,17 @@ namespace Pneuma.DI.Core.Bindings
         public readonly Type BindingType;
         public readonly Type InstanceType;
 
+        public readonly Type[] BindedInterfaces;
+
         public readonly BindingLifeTime BindingLifeTime;
 
-        public Binding(object instance, Type bindingType, Type instanceType, BindingLifeTime bindingLifeTime)
+        public Binding(object instance, Type bindingType, Type instanceType, BindingLifeTime bindingLifeTime, Type[] bindedInterfaces)
         {
             Instance = instance;
             BindingType = bindingType;
             InstanceType = instanceType;
             BindingLifeTime = bindingLifeTime;
+            BindedInterfaces = bindedInterfaces;
         }
 
         public bool Equals(Binding other)
@@ -28,13 +31,6 @@ namespace Pneuma.DI.Core.Bindings
         public override bool Equals(object obj)
         {
             return obj is Binding other && Equals(other);
-        }
-
-        public override int GetHashCode()
-        {
-            return BindingLifeTime == BindingLifeTime.Singular
-                ? BindingType.GetHashCode()
-                : Instance.GetHashCode();
         }
     }
 }
