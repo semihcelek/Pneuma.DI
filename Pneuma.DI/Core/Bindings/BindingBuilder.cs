@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Pneuma.DI.Core.BindingContexts;
 using Pneuma.DI.Core.Injectors;
-using Pneuma.DI.Exception;
-using Pneuma.DI.Utility;
 
 namespace Pneuma.DI.Core.Bindings;
 
@@ -20,9 +19,12 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
 
     private RegistrationTime _registrationTime;
 
+    private readonly List<Type> _bindingInterfaces;
+
     public BindingBuilder(IContainer container)
     {
         _container = container;
+        _bindingInterfaces = new List<Type>();
         _activatedObject = null;
         BindingLifeTime = BindingLifeTime.Unspecified;
         _registrationTime = RegistrationTime.Unspecified;
@@ -99,21 +101,18 @@ public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
         return Equals(this, other);
     }
 
+    public void AddInterface(Type bindingInterface)
+    {
+        if (_bindingInterfaces.Contains(bindingInterface))
+        {
+            return;
+        }
+        
+        _bindingInterfaces.Add(bindingInterface);
+    }
+
     public override bool Equals(object obj)
     {
         return obj is BindingBuilder<TBinding> other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        unchecked
-        {
-            var hashCode = (_container != null ? _container.GetHashCode() : 0);
-            hashCode = (hashCode * 397) ^ (_specifiedConcreteType != null ? _specifiedConcreteType.GetHashCode() : 0);
-            hashCode = (hashCode * 397) ^ (_activatedObject != null ? _activatedObject.GetHashCode() : 0);
-            hashCode = (hashCode * 397) ^ (int)BindingLifeTime;
-            hashCode = (hashCode * 397) ^ (int)_registrationTime;
-            return hashCode;
-        }
     }
 }

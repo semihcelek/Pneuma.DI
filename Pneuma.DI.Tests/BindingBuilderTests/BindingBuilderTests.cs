@@ -68,8 +68,9 @@ public class BindingBuilderTests
     [Test]
     public void BindingBuilder_Binds_Interface_As_Singleton()
     {
-        BindingBuilder<IBaz> bindingBuilder = new BindingBuilder<IBaz>(_container);
-        bindingBuilder.To<BazImplementation>().AsSingle().NonLazy();
+        BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_container);
+        bindingBuilder.AddInterface(typeof(IBaz));
+        bindingBuilder.AsSingle().NonLazy();
 
         _container.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
@@ -84,8 +85,10 @@ public class BindingBuilderTests
     [Test]
     public void BindingBuilder_Binds_Interface_As_Transient()
     {
-        var bindingBuilder = new BindingBuilder<IBaz>(_container);
-        bindingBuilder.To<BazImplementation>().AsTransient().NonLazy();
+        BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_container);
+        bindingBuilder.AddInterface(typeof(IBaz));
+        
+        bindingBuilder.AsTransient().NonLazy();
 
         _container.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
@@ -100,8 +103,9 @@ public class BindingBuilderTests
     [Test]
     public void BindingBuilder_Binds_Lazy_Not_Registered_Container()
     {
-        var bindingBuilder = new BindingBuilder<IBaz>(_container);
-        bindingBuilder.To<BazImplementation>().AsTransient().Lazy();
+        BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_container);
+        bindingBuilder.AddInterface(typeof(IBaz));
+        bindingBuilder.AsTransient().Lazy();
 
         bool isRegistered = _container.ContainerBindingLookup(typeof(IBaz), out Binding _, false);
         
@@ -111,7 +115,7 @@ public class BindingBuilderTests
     [Test]
     public void BindingBuilder_Binds_Lazy_And_Activates_When_Required()
     {
-        var bindingBuilder = new BindingBuilder<Foo>(_container);
+        BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_container);
         bindingBuilder.AsTransient().Lazy();
 
         _container.Bind<Bar>().AsTransient().NonLazy();
@@ -124,7 +128,7 @@ public class BindingBuilderTests
     [Test]
     public void BindingBuilder_Doesnt_Binds_Lazy()
     {
-        var bindingBuilder = new BindingBuilder<Foo>(_container);
+        BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_container);
         bindingBuilder.AsTransient().Lazy();
 
         _container.Bind<Foo>().AsSingle().Lazy();

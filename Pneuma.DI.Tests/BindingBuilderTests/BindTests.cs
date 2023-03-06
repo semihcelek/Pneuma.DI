@@ -19,5 +19,20 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
             Assert.IsTrue(typeof(Foo) == binding.BindingType);
             Assert.IsAssignableFrom<Foo>(binding.Instance);
         }
+        
+        [Test]
+        public void Binding_Retrieves_Binded_Interface_Types()
+        {
+            IBaz bazImplementation = new BazImplementation();
+            Type bindingType = bazImplementation.GetType().GetInterface(nameof(IBaz));
+
+            Type[] interfaces = new[] { typeof(IBaz) };
+            
+            Binding binding = new Binding(bazImplementation, bindingType, bazImplementation.GetType(), BindingLifeTime.Singular,
+                interfaces);
+            
+            Assert.IsTrue(typeof(IBaz) == binding.BindingType);
+            Assert.IsAssignableFrom<IBaz>(binding.Instance);
+        }
     }
 }

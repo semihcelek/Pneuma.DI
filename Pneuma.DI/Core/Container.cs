@@ -30,13 +30,7 @@ namespace Pneuma.DI.Core
             SanityCheck();
             return new BindingBuilder<T>(this);
         }
-
-        public IBindingBuilder<T> BindInterface<T>()
-        {
-            SanityCheck();
-            return new BindingBuilder<T>(this);
-        }
-
+        
         public bool ContainerBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings = true)
         {
             binding = default;
@@ -105,7 +99,7 @@ namespace Pneuma.DI.Core
             return true;
         }
 
-        private void SanityCheck()
+        public void SanityCheck()
         {
             if (!_isValid)
             {
