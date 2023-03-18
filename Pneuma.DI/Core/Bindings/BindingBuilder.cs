@@ -78,7 +78,7 @@ namespace Pneuma.DI.Core.Bindings
 
             Binding binding = new Binding(_activatedObject,
                 BuildingType, _activatedObject.GetType(),
-                BindingLifeTime, Array.Empty<Type>());
+                BindingLifeTime, _bindingInterfaces.ToArray());
             
             return binding;
         }

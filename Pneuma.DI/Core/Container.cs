@@ -52,7 +52,7 @@ namespace Pneuma.DI.Core
                 Type[] bindedInterfaces = registeredBinding.BindedInterfaces;
                 for (int count = 0; count < bindedInterfaces.Length; count++)
                 {
-                    Type bindedInterface = bindedInterfaces[index];
+                    Type bindedInterface = bindedInterfaces[count];
 
                     if (bindedInterface != lookupType)
                     {
@@ -81,8 +81,7 @@ namespace Pneuma.DI.Core
                 
                 for (int count = 0; count < bindedInterfaces.Count; count++)
                 {
-                    Type bindedInterface = bindedInterfaces[index];
-
+                    Type bindedInterface = bindedInterfaces[count];
                     if (bindedInterface != lookupType)
                     {
                         continue;

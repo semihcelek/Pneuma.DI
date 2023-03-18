@@ -16,11 +16,12 @@ namespace Pneuma.Sandbox
         {
             Container diContainer = new Container();
 
-            diContainer.Bind<Foo>().AsTransient().Lazy();
+            diContainer.Bind<Foo>().AsTransient().NonLazy();
             diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
-            diContainer.Bind<Qux>().AsTransient().Lazy();
+            diContainer.Bind<Qux>().AsTransient().NonLazy();
 
             diContainer.Bind<BazController>().AsSingle().NonLazy();
+            
         }
     }
 }
