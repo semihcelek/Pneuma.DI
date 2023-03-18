@@ -9,17 +9,19 @@ namespace Pneuma.DI.Core.Bindings
     {
         private readonly IContainer _container;
 
-        public  Type BuildingType => typeof(TBinding);
-    
         private TBinding _specifiedConcreteType;
-
-        private object _activatedObject;
-
-        public BindingLifeTime BindingLifeTime;
 
         private RegistrationTime _registrationTime;
 
+        private object _activatedObject;
+        
+        public  Type BuildingType => typeof(TBinding);
+
+        public BindingLifeTime BindingLifeTime;
+
         private readonly List<Type> _bindingInterfaces;
+
+        public readonly IReadOnlyList<Type> BindedInterfaces => _bindingInterfaces;
 
         public BindingBuilder(IContainer container)
         {
@@ -59,17 +61,7 @@ namespace Pneuma.DI.Core.Bindings
         public void NonLazy()
         {
             Binding binding = ActivateBinding();
-            _container.RegisterBinding(binding, BindingLifeTime);
-        }
-
-        private Binding ActivateBinding()
-        {
-            InjectDependencies<TBinding>();
-
-            Binding binding = new Binding(_activatedObject,
-                BuildingType, _activatedObject.GetType(),
-                BindingLifeTime, Array.Empty<Type>());
-            return binding;
+            _container.RegisterBinding(binding);
         }
 
         private void InjectDependencies<T>()
@@ -80,13 +72,33 @@ namespace Pneuma.DI.Core.Bindings
             _activatedObject = activatedObject;
         }
 
+        private Binding ActivateBinding()
+        {
+            InjectDependencies<TBinding>();
+
+            Binding binding = new Binding(_activatedObject,
+                BuildingType, _activatedObject.GetType(),
+                BindingLifeTime, Array.Empty<Type>());
+            
+            return binding;
+        }
 
         public Binding BuildBinding()
         {
             Binding activatedBinding = ActivateBinding();
-            _container.RegisterBinding(activatedBinding, activatedBinding.BindingLifeTime);
+            _container.RegisterBinding(activatedBinding);
         
             return activatedBinding;
+        }
+
+        public void AddInterface(Type bindingInterface)
+        {
+            if (_bindingInterfaces.Contains(bindingInterface))
+            {
+                return;
+            }
+        
+            _bindingInterfaces.Add(bindingInterface);
         }
 
         public bool Equals(BindingBuilder<TBinding> other)
@@ -99,16 +111,6 @@ namespace Pneuma.DI.Core.Bindings
         public bool Equals(IBindingBuilder other)
         {
             return Equals(this, other);
-        }
-
-        public void AddInterface(Type bindingInterface)
-        {
-            if (_bindingInterfaces.Contains(bindingInterface))
-            {
-                return;
-            }
-        
-            _bindingInterfaces.Add(bindingInterface);
         }
 
         public override bool Equals(object obj)

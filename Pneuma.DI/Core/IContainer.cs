@@ -8,7 +8,7 @@ namespace Pneuma.DI.Core
     {
         bool ContainerBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings = true);
 
-        bool RegisterBinding(Binding binding, BindingLifeTime bindingLifeTime);
+        bool RegisterBinding(Binding binding);
 
         bool RegisterLazyBinding<TBinding>(BindingBuilder<TBinding> bindingBuilder);
     }

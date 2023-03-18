@@ -8,19 +8,16 @@ namespace Pneuma.DI.Core
 {
     public sealed class Container : IContainer, IInjector, IDisposable
     {
-        private readonly Dictionary<int, Binding> _singletonRegistrations;
+        private readonly List<Binding> _registrations;
 
-        private readonly List<Binding> _transientRegistrations;
-
-        private readonly List<IBindingBuilder> _lazyBindingBuilders;
+        private readonly List<IBindingBuilder> _lazyBindingBuilerRegistrations;
 
         private bool _isValid;
 
         public Container()
         {
-            _singletonRegistrations = new Dictionary<int, Binding>();
-            _transientRegistrations = new List<Binding>();
-            _lazyBindingBuilders = new List<IBindingBuilder>();
+            _registrations = new List<Binding>();
+            _lazyBindingBuilerRegistrations = new List<IBindingBuilder>();
 
             _isValid = true;
         }
@@ -35,23 +32,84 @@ namespace Pneuma.DI.Core
         {
             binding = default;
 
-            int lookupTypeHashCode = lookupType.GetHashCode();
-            if (_singletonRegistrations.ContainsKey(lookupTypeHashCode))
-            {
-                binding = _singletonRegistrations[lookupTypeHashCode];
-                return true;
-            }
+            return lookupType.IsInterface 
+                ? InterfaceBindingLookup(lookupType, out binding, bindAvailableLazyBindings) 
+                : ConcreteBindingLookup(lookupType, out binding, bindAvailableLazyBindings);
+        }
 
-            for (int index = 0; index < _transientRegistrations.Count; index++)
+        private bool InterfaceBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings)
+        {
+            binding = default;
+
+            for (int index = _registrations.Count - 1; index >= 0; index--)
             {
-                Binding transientBinding = _transientRegistrations[index];
-                int bindingTypeHashCode = transientBinding.BindingType.GetHashCode();
-                if (bindingTypeHashCode != lookupTypeHashCode)
+                Binding registeredBinding = _registrations[index];
+                if (registeredBinding.BindedInterfaces.Length <= 0)
                 {
                     continue;
                 }
 
-                binding = transientBinding;
+                Type[] bindedInterfaces = registeredBinding.BindedInterfaces;
+                for (int count = 0; count < bindedInterfaces.Length; count++)
+                {
+                    Type bindedInterface = bindedInterfaces[index];
+
+                    if (bindedInterface != lookupType)
+                    {
+                        continue;
+                    }
+
+                    binding = registeredBinding;
+                    return true;
+                }
+            }
+
+            if (!bindAvailableLazyBindings)
+            {
+                return false;
+            }
+
+            for (int index = _lazyBindingBuilerRegistrations.Count - 1; index >= 0; index--)
+            {
+                IBindingBuilder lazyBindingBuilder = _lazyBindingBuilerRegistrations[index];
+                
+                IReadOnlyList<Type> bindedInterfaces = lazyBindingBuilder.BindedInterfaces;
+                if (bindedInterfaces.Count <= 0)
+                {
+                    continue;
+                }
+                
+                for (int count = 0; count < bindedInterfaces.Count; count++)
+                {
+                    Type bindedInterface = bindedInterfaces[index];
+
+                    if (bindedInterface != lookupType)
+                    {
+                        continue;
+                    }
+
+                    binding = lazyBindingBuilder.BuildBinding();
+                    _lazyBindingBuilerRegistrations.RemoveAt(index);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool ConcreteBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings)
+        {
+            binding = default;
+
+            for (int index = _registrations.Count - 1; index >= 0; index--)
+            {
+                Binding registeredBinding = _registrations[index];
+                if (registeredBinding.BindingType != lookupType)
+                {
+                    continue;
+                }
+
+                binding = registeredBinding;
                 return true;
             }
 
@@ -60,42 +118,31 @@ namespace Pneuma.DI.Core
                 return false;
             }
 
-            for (int index = _lazyBindingBuilders.Count - 1; index >= 0; index--)
+            for (int index = _lazyBindingBuilerRegistrations.Count - 1; index >= 0; index--)
             {
-                IBindingBuilder bindingBuilder = _lazyBindingBuilders[index];
-                if (bindingBuilder.BuildingType.GetHashCode() != lookupTypeHashCode)
+                IBindingBuilder lazyBindingBuilder = _lazyBindingBuilerRegistrations[index];
+                if (lazyBindingBuilder.BuildingType != lookupType)
                 {
                     continue;
                 }
 
-                binding = bindingBuilder.BuildBinding();
-                _lazyBindingBuilders.RemoveAt(index);
+                binding = lazyBindingBuilder.BuildBinding();
+                _lazyBindingBuilerRegistrations.RemoveAt(index);
                 return true;
             }
 
             return false;
         }
 
-        public bool RegisterBinding(Binding binding, BindingLifeTime bindingLifeTime)
+        public bool RegisterBinding(Binding binding)
         {
-            switch (bindingLifeTime)
-            {
-                case BindingLifeTime.Singular:
-                    _singletonRegistrations.Add(binding.BindingType.GetHashCode(), binding);
-                    return true;
-                case BindingLifeTime.Transient:
-                    _transientRegistrations.Add(binding);
-                    return true;
-                default:
-                    _isValid = false;
-                    throw new PneumaException(
-                        "Unable to register binding! Please specify valid lifetime for the binding");
-            }
+            _registrations.Add(binding);
+            return true;
         }
 
         public bool RegisterLazyBinding<TBinding>(BindingBuilder<TBinding> bindingBuilder)
         {
-            _lazyBindingBuilders.Add(bindingBuilder);
+            _lazyBindingBuilerRegistrations.Add(bindingBuilder);
             return true;
         }
 
@@ -109,14 +156,13 @@ namespace Pneuma.DI.Core
 
         public int GetActiveObjectCount()
         {
-            return _singletonRegistrations.Count + _transientRegistrations.Count;
+            return _registrations.Count;
         }
 
         public void Dispose()
         {
-            _singletonRegistrations.Clear();
-            _transientRegistrations.Clear();
-            _lazyBindingBuilders.Clear();
+            _registrations.Clear();
+            _lazyBindingBuilerRegistrations.Clear();
         }
     }
 }

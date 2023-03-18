@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Pneuma.DI.Core.Bindings
 {
@@ -13,5 +14,7 @@ namespace Pneuma.DI.Core.Bindings
         Binding BuildBinding();
     
         Type BuildingType { get; }
+        
+        IReadOnlyList<Type> BindedInterfaces { get; }
     }
 }
