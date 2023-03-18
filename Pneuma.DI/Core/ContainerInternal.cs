@@ -117,7 +117,8 @@ namespace Pneuma.DI.Core
 
                     if (bindingRegistration.BindingType == binding.BindingType)
                     {
-                        throw new BindingFailedException();
+                        throw new BindingFailedException(
+                            $"Unable to bind {binding.BindingType}! {binding.BindingType} is already binded!");
                     }
 
                     Type[] bindingRegistrationBindedInterfaces = bindingRegistration.BindedInterfaces;
@@ -127,7 +128,8 @@ namespace Pneuma.DI.Core
 
                         if (TypeIsBindedLookup(bindedInterface, binding))
                         {
-                            throw new BindingFailedException();
+                            throw new BindingFailedException(
+                                $"Unable to bind {binding.BindingType}! {bindedInterface} is already binded!");
                         }
                     }
                 }
