@@ -6,37 +6,8 @@ using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
 {
-    public sealed class Container : IContainer, IInjector, IDisposable
+    public sealed partial class Container
     {
-        private readonly List<Binding> _registrations;
-
-        private readonly List<IBindingBuilder> _lazyBindingBuilerRegistrations;
-
-        private bool _isValid;
-
-        public Container()
-        {
-            _registrations = new List<Binding>();
-            _lazyBindingBuilerRegistrations = new List<IBindingBuilder>();
-
-            _isValid = true;
-        }
-
-        public IBindingBuilder<T> Bind<T>()
-        {
-            SanityCheck();
-            return new BindingBuilder<T>(this);
-        }
-        
-        public bool ContainerBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings = true)
-        {
-            binding = default;
-
-            return lookupType.IsInterface 
-                ? InterfaceBindingLookup(lookupType, out binding, bindAvailableLazyBindings) 
-                : ConcreteBindingLookup(lookupType, out binding, bindAvailableLazyBindings);
-        }
-
         private bool InterfaceBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings)
         {
             binding = default;
@@ -53,7 +24,6 @@ namespace Pneuma.DI.Core
                 for (int count = 0; count < bindedInterfaces.Length; count++)
                 {
                     Type bindedInterface = bindedInterfaces[count];
-
                     if (bindedInterface != lookupType)
                     {
                         continue;
@@ -69,9 +39,9 @@ namespace Pneuma.DI.Core
                 return false;
             }
 
-            for (int index = _lazyBindingBuilerRegistrations.Count - 1; index >= 0; index--)
+            for (int index = _lazyBindingBuilderRegistrations.Count - 1; index >= 0; index--)
             {
-                IBindingBuilder lazyBindingBuilder = _lazyBindingBuilerRegistrations[index];
+                IBindingBuilder lazyBindingBuilder = _lazyBindingBuilderRegistrations[index];
                 
                 IReadOnlyList<Type> bindedInterfaces = lazyBindingBuilder.BindedInterfaces;
                 if (bindedInterfaces.Count <= 0)
@@ -88,7 +58,7 @@ namespace Pneuma.DI.Core
                     }
 
                     binding = lazyBindingBuilder.BuildBinding();
-                    _lazyBindingBuilerRegistrations.RemoveAt(index);
+                    _lazyBindingBuilderRegistrations.RemoveAt(index);
                     return true;
                 }
             }
@@ -117,51 +87,78 @@ namespace Pneuma.DI.Core
                 return false;
             }
 
-            for (int index = _lazyBindingBuilerRegistrations.Count - 1; index >= 0; index--)
+            for (int index = _lazyBindingBuilderRegistrations.Count - 1; index >= 0; index--)
             {
-                IBindingBuilder lazyBindingBuilder = _lazyBindingBuilerRegistrations[index];
+                IBindingBuilder lazyBindingBuilder = _lazyBindingBuilderRegistrations[index];
                 if (lazyBindingBuilder.BuildingType != lookupType)
                 {
                     continue;
                 }
 
                 binding = lazyBindingBuilder.BuildBinding();
-                _lazyBindingBuilerRegistrations.RemoveAt(index);
+                _lazyBindingBuilderRegistrations.RemoveAt(index);
                 return true;
             }
 
             return false;
         }
 
-        public bool RegisterBinding(Binding binding)
+        private bool RegisterInternal(Binding binding)
         {
-            _registrations.Add(binding);
-            return true;
-        }
-
-        public bool RegisterLazyBinding<TBinding>(BindingBuilder<TBinding> bindingBuilder)
-        {
-            _lazyBindingBuilerRegistrations.Add(bindingBuilder);
-            return true;
-        }
-
-        public void SanityCheck()
-        {
-            if (!_isValid)
+            if (binding.BindingLifeTime == BindingLifeTime.Singular)
             {
-                throw new SanityCheckFailedException("Container validity is interrupted.");
+                for (int index = 0; index < _registrations.Count; index++)
+                {
+                    Binding bindingRegistration = _registrations[index];
+                    if (bindingRegistration.BindingLifeTime != BindingLifeTime.Singular)
+                    {
+                        continue;
+                    }
+
+                    if (bindingRegistration.BindingType == binding.BindingType)
+                    {
+                        throw new BindingFailedException();
+                    }
+
+                    Type[] bindingRegistrationBindedInterfaces = bindingRegistration.BindedInterfaces;
+                    for (int count = 0; count < bindingRegistrationBindedInterfaces.Length; count++)
+                    {
+                        Type bindedInterface = bindingRegistrationBindedInterfaces[count];
+
+                        if (TypeIsBindedLookup(bindedInterface, binding))
+                        {
+                            throw new BindingFailedException();
+                        }
+                    }
+                }
+
+                _registrations.Add(binding);
             }
+            else
+            {
+                _registrations.Add(binding);
+            }
+            
+            return true;
         }
 
-        public int GetActiveObjectCount()
+        private bool TypeIsBindedLookup(Type lookType, Binding bindingType)
         {
-            return _registrations.Count;
-        }
+            if (lookType == bindingType.BindingType)
+            {
+                return true;
+            }
 
-        public void Dispose()
-        {
-            _registrations.Clear();
-            _lazyBindingBuilerRegistrations.Clear();
+            for (int index = 0; index < bindingType.BindedInterfaces.Length; index++)
+            {
+                Type bindedInterface = bindingType.BindedInterfaces[index];
+                if (lookType == bindedInterface)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
