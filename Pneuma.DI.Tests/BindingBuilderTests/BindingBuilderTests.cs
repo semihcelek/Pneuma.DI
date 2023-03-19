@@ -71,7 +71,6 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
 
             _container.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
-            // Assert.AreEqual(typeof(IBaz), retrievedBinding.BindingType);
             Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
             Assert.AreEqual(typeof(BazImplementation), retrievedBinding.InstanceType);
 
@@ -88,7 +87,6 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
 
             _container.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
-            // Assert.AreEqual(typeof(IBaz), retrievedBinding.BindingType);
             Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
             Assert.AreEqual(typeof(BazImplementation), retrievedBinding.InstanceType);
         
