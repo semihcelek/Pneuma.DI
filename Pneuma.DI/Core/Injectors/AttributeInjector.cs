@@ -58,6 +58,11 @@ namespace Pneuma.DI.Core.Injectors
                         throw new BindingFailedException(
                             $"Unable to find {dependedType}. Required dependency for {buildingType} is not registered to the object graph.");
                     }
+                    
+                    if (!isRequiredTypeBinded)
+                    {
+                        continue;
+                    }
 
                     propertyInfo.SetValue(injectObject, binding.Instance);
                 }
@@ -89,6 +94,11 @@ namespace Pneuma.DI.Core.Injectors
                     {
                         throw new BindingFailedException(
                             $"Unable to find {dependedType}. Required dependency for {buildingType} is not registered to the object graph.");
+                    }
+
+                    if (!isRequiredTypeBinded)
+                    {
+                        continue;
                     }
 
                     fieldInfo.SetValue(injectObject, binding.Instance);
