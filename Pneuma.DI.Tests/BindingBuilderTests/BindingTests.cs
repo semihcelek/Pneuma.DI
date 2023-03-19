@@ -6,7 +6,7 @@ using Pneuma.DI.Tests.Examples;
 
 namespace Pneuma.DI.Tests.BindingBuilderTests
 {
-    public class BindInfoTests
+    public class BindingTests
     {
         [Test]
         public void Binding_Retrieves_Type()

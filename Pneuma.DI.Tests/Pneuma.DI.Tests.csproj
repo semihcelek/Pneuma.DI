@@ -44,7 +44,7 @@
     </ItemGroup>
     <ItemGroup>
         <Compile Include="BindingBuilderTests\BindingBuilderTests.cs" />
-        <Compile Include="BindingBuilderTests\BindTests.cs" />
+        <Compile Include="BindingBuilderTests\BindingTests.cs" />
         <Compile Include="ContainerTests\ContainerTests.cs" />
         <Compile Include="Examples\Bar.cs" />
         <Compile Include="Examples\BazImplementation.cs" />
