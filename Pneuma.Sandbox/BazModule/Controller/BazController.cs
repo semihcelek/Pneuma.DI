@@ -28,6 +28,7 @@ namespace Pneuma.Sandbox.BazModule.Controller
             Console.WriteLine(_baz.Fizz);
             Console.WriteLine(_foo.MyInt);
             Console.WriteLine(_smi.Foo.MyInt);
+            _smi.Bar.DoStuffWithFoo();
         }
     }
 }

@@ -17,6 +17,7 @@ namespace Pneuma.Sandbox
             Container diContainer = new Container();
 
             diContainer.Bind<Foo>().AsTransient().Lazy();
+            diContainer.Bind<Bar>().AsTransient().Lazy();
             diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
             diContainer.Bind<Qux>().AsTransient().Lazy();
             diContainer.Bind<Smi>().AsTransient().Lazy();

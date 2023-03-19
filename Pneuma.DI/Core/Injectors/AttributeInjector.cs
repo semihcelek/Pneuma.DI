@@ -28,8 +28,13 @@ namespace Pneuma.DI.Core.Injectors
         {
             Type buildingType = typeof(TBinding);
 
+            InjectProperties(ref injectObject, buildingType);
+            InjectFields(ref injectObject, buildingType);
+        }
+
+        private void InjectProperties<TBinding>(ref TBinding injectObject, Type buildingType)
+        {
             PropertyInfo[] propertyInfos = buildingType.GetProperties();
-            
             for (var index = 0; index < propertyInfos.Length; index++)
             {
                 PropertyInfo propertyInfo = propertyInfos[index];
@@ -37,21 +42,56 @@ namespace Pneuma.DI.Core.Injectors
 
                 foreach (Attribute attribute in attributes)
                 {
-                    if (!attribute.Match(RequiredInjectAttribute))
+                    bool isRequiredDependency = attribute.Match(RequiredInjectAttribute);
+                    bool isOptionalDependency = attribute.Match(OptionalInjectAttribute);
+
+                    if (!isRequiredDependency && !isOptionalDependency)
                     {
                         continue;
                     }
 
                     Type dependedType = propertyInfo.PropertyType;
-                    
+
                     bool isRequiredTypeBinded = _container.ContainerBindingLookup(dependedType, out Binding binding);
-                    if (!isRequiredTypeBinded)
+                    if (!isRequiredTypeBinded && isRequiredDependency)
                     {
                         throw new BindingFailedException(
                             $"Unable to find {dependedType}. Required dependency for {buildingType} is not registered to the object graph.");
                     }
-                    
+
                     propertyInfo.SetValue(injectObject, binding.Instance);
+                }
+            }
+        }
+        
+        private void InjectFields<TBinding>(ref TBinding injectObject, Type buildingType)
+        {
+            FieldInfo[] fieldInfos = buildingType.GetFields();
+            for (var index = 0; index < fieldInfos.Length; index++)
+            {
+                FieldInfo fieldInfo = fieldInfos[index];
+                IEnumerable<Attribute> attributes = fieldInfo.GetCustomAttributes();
+
+                foreach (Attribute attribute in attributes)
+                {
+                    bool isRequiredDependency = attribute.Match(RequiredInjectAttribute);
+                    bool isOptionalDependency = attribute.Match(OptionalInjectAttribute);
+
+                    if (!isRequiredDependency && !isOptionalDependency)
+                    {
+                        continue;
+                    }
+
+                    Type dependedType = fieldInfo.FieldType;
+
+                    bool isRequiredTypeBinded = _container.ContainerBindingLookup(dependedType, out Binding binding);
+                    if (!isRequiredTypeBinded && isRequiredDependency)
+                    {
+                        throw new BindingFailedException(
+                            $"Unable to find {dependedType}. Required dependency for {buildingType} is not registered to the object graph.");
+                    }
+
+                    fieldInfo.SetValue(injectObject, binding.Instance);
                 }
             }
         }

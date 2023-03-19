@@ -6,5 +6,8 @@ namespace Pneuma.DI.Tests.Examples
     {
         [Inject]
         public Foo Foo { get; private set; }
+
+        [Inject] 
+        public Bar Bar;
     }
 }

@@ -95,8 +95,8 @@ namespace Pneuma.DI.Core
                     continue;
                 }
 
-                binding = lazyBindingBuilder.BuildBinding();
                 _lazyBindingBuilderRegistrations.RemoveAt(index);
+                binding = lazyBindingBuilder.BuildBinding();
                 return true;
             }
 
