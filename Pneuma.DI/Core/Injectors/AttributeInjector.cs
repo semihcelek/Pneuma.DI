@@ -30,6 +30,7 @@ namespace Pneuma.DI.Core.Injectors
 
             InjectProperties(ref injectObject, buildingType);
             InjectFields(ref injectObject, buildingType);
+            InjectMethods(ref injectObject, buildingType);
         }
 
         private void InjectProperties<TBinding>(ref TBinding injectObject, Type buildingType)
@@ -68,7 +69,7 @@ namespace Pneuma.DI.Core.Injectors
                 }
             }
         }
-        
+
         private void InjectFields<TBinding>(ref TBinding injectObject, Type buildingType)
         {
             FieldInfo[] fieldInfos = buildingType.GetFields();
@@ -102,6 +103,46 @@ namespace Pneuma.DI.Core.Injectors
                     }
 
                     fieldInfo.SetValue(injectObject, binding.Instance);
+                }
+            }
+        }
+
+        private void InjectMethods<TBinding>(ref TBinding injectObject, Type buildingType)
+        {
+            MethodInfo[] methodInfos = buildingType.GetMethods();
+            for (var index = 0; index < methodInfos.Length; index++)
+            {
+                MethodInfo methodInfo = methodInfos[index];
+                IEnumerable<Attribute> attributes = methodInfo.GetCustomAttributes();
+
+                foreach (Attribute attribute in attributes)
+                {
+                    bool isRequiredDependency = attribute.Match(RequiredInjectAttribute);
+                    bool isOptionalDependency = attribute.Match(OptionalInjectAttribute);
+
+                    if (!isRequiredDependency && !isOptionalDependency)
+                    {
+                        continue;
+                    }
+
+                    ParameterInfo[] parameterInfos = methodInfo.GetParameters();
+                    int parameterCount = parameterInfos.Length;
+                    object[] parameters = new object[parameterCount];
+                    for (int count = 0; count < parameterCount; count++)
+                    {
+                        Type parameterType = parameterInfos[count].ParameterType;
+
+                        bool isRequiredTypeBinded = _container.ContainerBindingLookup(parameterType, out Binding binding);
+                        if (!isRequiredTypeBinded)
+                        {
+                            throw new BindingFailedException(
+                                $"Unable to find {parameterType}. Required dependency for {buildingType} is not registered to the object graph.");
+                        }
+
+                        parameters[count] = binding.Instance;
+                    }
+
+                    methodInfo.Invoke(injectObject, parameters);
                 }
             }
         }
