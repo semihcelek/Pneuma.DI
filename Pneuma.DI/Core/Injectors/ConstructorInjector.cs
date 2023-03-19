@@ -5,7 +5,7 @@ using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core.Injectors
 {
-    public readonly struct ConstructorInjector : IDisposable
+    public readonly struct ConstructorInjector
     {
         private readonly IContainer _container;
 
@@ -18,12 +18,7 @@ namespace Pneuma.DI.Core.Injectors
         {
             return new ConstructorInjector(container);
         }
-
-        public bool InjectToConstructor<TBinding, TConcrete>(out TConcrete injectedObject) where TConcrete : TBinding
-        {
-            return InjectToConstructorInternal(out injectedObject);
-        }
-
+        
         public bool InjectToConstructor<TBinding>(out TBinding injectedObject)
         {
             return InjectToConstructorInternal(out injectedObject);
@@ -82,11 +77,6 @@ namespace Pneuma.DI.Core.Injectors
         {
             T instance = Activator.CreateInstance<T>();
             return instance;
-        }
-
-        public void Dispose()
-        {
-            
         }
     }
 }

@@ -11,12 +11,15 @@ namespace Pneuma.Sandbox.BazModule.Controller
 
         private readonly Foo _foo;
 
-        public BazController(IBaz baz, Qux qux, Foo foo)
+        private readonly Smi _smi;
+
+        public BazController(IBaz baz, Qux qux, Foo foo, Smi smi)
         {
             _baz = baz;
             _qux = qux;
             _foo = foo;
-            
+            _smi = smi;
+
             DoStuff();
         }
 
@@ -24,6 +27,7 @@ namespace Pneuma.Sandbox.BazModule.Controller
         {
             Console.WriteLine(_baz.Fizz);
             Console.WriteLine(_foo.MyInt);
+            Console.WriteLine(_smi.Foo.MyInt);
         }
     }
 }

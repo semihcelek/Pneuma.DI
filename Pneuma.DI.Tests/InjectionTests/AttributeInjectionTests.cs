@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using Pneuma.DI.Core;
+using Pneuma.DI.Tests.Examples;
 
 namespace Pneuma.DI.Tests.InjectionTests
 {
@@ -17,7 +18,8 @@ namespace Pneuma.DI.Tests.InjectionTests
         [Test]
         public void AttributeInjector_Process_Inject_On_Fields()
         {
-        
+            _container.Bind<Foo>().AsSingle().Lazy();
+            _container.Bind<Smi>().AsSingle().NonLazy();
         }
     }
 }

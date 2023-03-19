@@ -66,9 +66,12 @@ namespace Pneuma.DI.Core.Bindings
 
         private void InjectDependencies<T>()
         {
-            using ConstructorInjector constructorInjector = ConstructorInjector.Create(_container);
-        
+            ConstructorInjector constructorInjector = ConstructorInjector.Create(_container);
+            AttributeInjector attributeInjector = AttributeInjector.Create(_container);
+            
             constructorInjector.InjectToConstructor<T>(out T activatedObject);
+            attributeInjector.InjectToAttributes<T>(ref activatedObject);
+            
             _activatedObject = activatedObject;
         }
 

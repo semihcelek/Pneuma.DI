@@ -52,7 +52,9 @@
         <Compile Include="Examples\Fred.cs" />
         <Compile Include="Examples\IBaz.cs" />
         <Compile Include="Examples\Qux.cs" />
+        <Compile Include="Examples\Smi.cs" />
         <Compile Include="InjectionTests\AttributeInjectionTests.cs" />
+        <Compile Include="InjectionTests\ConstructorInjectionTests.cs" />
         <Compile Include="Properties\AssemblyInfo.cs" />
     </ItemGroup>
     <ItemGroup>
