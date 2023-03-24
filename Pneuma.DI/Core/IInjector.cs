@@ -5,7 +5,5 @@ namespace Pneuma.DI.Core
     public interface IInjector
     {
         IBindingBuilder<TConcrete> Bind<TConcrete>();
-        
-        // IBindingBuilder<T> BindInterface<T>();
     }
 }
