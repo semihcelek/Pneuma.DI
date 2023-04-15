@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Pneuma.DI.Core.Bindings;
-using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
 {
@@ -11,19 +10,14 @@ namespace Pneuma.DI.Core
 
         private readonly List<IBindingBuilder> _lazyBindingBuilderRegistrations;
 
-        private bool _isValid;
-
         public DiContainer()
         {
             _registrations = new List<Binding>();
             _lazyBindingBuilderRegistrations = new List<IBindingBuilder>();
-
-            _isValid = true;
         }
 
         public IBindingBuilder<T> Bind<T>()
         {
-            SanityCheck();
             return new BindingBuilder<T>(this);
         }
         
@@ -46,15 +40,7 @@ namespace Pneuma.DI.Core
             _lazyBindingBuilderRegistrations.Add(bindingBuilder);
             return true;
         }
-
-        public void SanityCheck()
-        {
-            if (!_isValid)
-            {
-                throw new SanityCheckFailedException("Container validity is interrupted.");
-            }
-        }
-
+        
         public int GetActiveObjectCount()
         {
             return _registrations.Count;
