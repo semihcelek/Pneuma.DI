@@ -2,7 +2,7 @@
 {
     public interface IBindingActivator<TBinding>
     {
-        void NonLazy();
+        void Eager();
 
         void Lazy();
     }

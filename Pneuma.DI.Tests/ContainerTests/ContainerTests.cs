@@ -21,7 +21,7 @@ namespace Pneuma.DI.Tests.ContainerTests
         [Test]
         public void Bind_As_Single()
         {
-            _diContainer.Bind<Foo>().AsSingle().NonLazy();
+            _diContainer.Bind<Foo>().AsSingle().Eager();
         }
 
         [Test]
@@ -29,15 +29,15 @@ namespace Pneuma.DI.Tests.ContainerTests
         {
             Assert.Throws<BindingFailedException>(() =>
             {
-                _diContainer.Bind<Bar>().AsSingle().NonLazy();
+                _diContainer.Bind<Bar>().AsSingle().Eager();
             });
         }
         
         [Test]
         public void Bind_Multiple_Dependencies_As_Single()
         {
-            _diContainer.Bind<Foo>().AsSingle().NonLazy();
-            _diContainer.Bind<Bar>().AsSingle().NonLazy();
+            _diContainer.Bind<Foo>().AsSingle().Eager();
+            _diContainer.Bind<Bar>().AsSingle().Eager();
         }
 
         [Test]
@@ -45,16 +45,16 @@ namespace Pneuma.DI.Tests.ContainerTests
         {
             Assert.Throws<BindingFailedException>(() =>
             {
-                _diContainer.Bind<Foo>().AsSingle().NonLazy();
-                _diContainer.Bind<Foo>().AsSingle().NonLazy();
+                _diContainer.Bind<Foo>().AsSingle().Eager();
+                _diContainer.Bind<Foo>().AsSingle().Eager();
             });
         }
         
         [Test]
         public void Bind_Multiple_Dependencies_As_Transient()
         {
-            _diContainer.Bind<Foo>().AsTransient().NonLazy();
-            _diContainer.Bind<Bar>().AsTransient().NonLazy();
+            _diContainer.Bind<Foo>().AsTransient().Eager();
+            _diContainer.Bind<Bar>().AsTransient().Eager();
 
             Assert.AreEqual(2, _diContainer.GetActiveObjectCount());
         }
@@ -62,10 +62,10 @@ namespace Pneuma.DI.Tests.ContainerTests
         [Test]
         public void Bind_Same_Dependency_As_Transient()
         {
-            _diContainer.Bind<Foo>().AsTransient().NonLazy();
-            _diContainer.Bind<Foo>().AsTransient().NonLazy();
-            _diContainer.Bind<Foo>().AsTransient().NonLazy();
-            _diContainer.Bind<Foo>().AsTransient().NonLazy();
+            _diContainer.Bind<Foo>().AsTransient().Eager();
+            _diContainer.Bind<Foo>().AsTransient().Eager();
+            _diContainer.Bind<Foo>().AsTransient().Eager();
+            _diContainer.Bind<Foo>().AsTransient().Eager();
             
             Assert.AreEqual(4, _diContainer.GetActiveObjectCount());
         }
@@ -84,7 +84,7 @@ namespace Pneuma.DI.Tests.ContainerTests
         [Test]
         public void Bind_Interface_To_Implementation()
         {
-            _diContainer.Bind<BazImplementation, IBaz>().AsSingle().NonLazy();
+            _diContainer.Bind<BazImplementation, IBaz>().AsSingle().Eager();
             
             Assert.AreEqual(1, _diContainer.GetActiveObjectCount());
         }
@@ -92,10 +92,10 @@ namespace Pneuma.DI.Tests.ContainerTests
         [Test]
         public void Bind_Interface_To_Implementation_Transient()
         {
-            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
-            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
-            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
-            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
+            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().Eager();
+            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().Eager();
+            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().Eager();
+            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().Eager();
             
             Assert.AreEqual(4, _diContainer.GetActiveObjectCount());
         }

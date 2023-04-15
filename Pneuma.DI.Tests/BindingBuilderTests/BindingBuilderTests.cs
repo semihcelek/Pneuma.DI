@@ -22,7 +22,7 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         {
             BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_diContainer);
 
-            bindingBuilder.AsSingle().NonLazy();
+            bindingBuilder.AsSingle().Eager();
 
             _diContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
         
@@ -38,7 +38,7 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         {
             BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_diContainer);
 
-            bindingBuilder.AsTransient().NonLazy();
+            bindingBuilder.AsTransient().Eager();
 
             _diContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
 
@@ -55,10 +55,10 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
             Assert.Throws<BindingFailedException>(() =>
             {
                 BindingBuilder<Foo> bindingBuilderOne = new BindingBuilder<Foo>(_diContainer);
-                bindingBuilderOne.AsSingle().NonLazy();
+                bindingBuilderOne.AsSingle().Eager();
 
                 BindingBuilder<Foo> bindingBuilderTwo = new BindingBuilder<Foo>(_diContainer);
-                bindingBuilderTwo.AsSingle().NonLazy();
+                bindingBuilderTwo.AsSingle().Eager();
             });
         }
         
@@ -67,7 +67,7 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         {
             BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_diContainer);
             bindingBuilder.AddInterface(typeof(IBaz));
-            bindingBuilder.AsSingle().NonLazy();
+            bindingBuilder.AsSingle().Eager();
 
             _diContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
@@ -83,7 +83,7 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
             BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_diContainer);
             bindingBuilder.AddInterface(typeof(IBaz));
         
-            bindingBuilder.AsTransient().NonLazy();
+            bindingBuilder.AsTransient().Eager();
 
             _diContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
@@ -111,7 +111,7 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
             BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_diContainer);
             bindingBuilder.AsTransient().Lazy();
 
-            _diContainer.Bind<Bar>().AsTransient().NonLazy();
+            _diContainer.Bind<Bar>().AsTransient().Eager();
         
             bool isRegistered = _diContainer.ContainerBindingLookup(typeof(Foo), out Binding _);
         

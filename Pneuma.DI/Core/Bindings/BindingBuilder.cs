@@ -58,7 +58,7 @@ namespace Pneuma.DI.Core.Bindings
             _container.RegisterLazyBinding(this);
         }
 
-        public void NonLazy()
+        public void Eager()
         {
             Binding binding = ActivateBinding();
             _container.RegisterBinding(binding);

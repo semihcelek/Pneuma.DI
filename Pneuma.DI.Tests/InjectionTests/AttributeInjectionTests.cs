@@ -19,7 +19,7 @@ namespace Pneuma.DI.Tests.InjectionTests
         public void AttributeInjector_Process_Inject_On_Fields()
         {
             _diContainer.Bind<Foo>().AsSingle().Lazy();
-            _diContainer.Bind<Smi>().AsSingle().NonLazy();
+            _diContainer.Bind<Smi>().AsSingle().Eager();
         }
     }
 }

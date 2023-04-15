@@ -3,7 +3,7 @@
     public enum RegistrationTime
     {
         Unspecified,
-        InstantRegistration,
+        EagerRegistration,
         LazyRegistration
     }
 }
