@@ -1,5 +1,4 @@
 ﻿using Pneuma.DI.Core;
-using Pneuma.DI.Extensions;
 using Pneuma.DI.Tests.Examples;
 using Pneuma.Sandbox.BazModule.Controller;
 

@@ -23,6 +23,27 @@ namespace Pneuma.DI.Core
             return new BindingBuilder<T>(this);
         }
         
+        public IBindingBuilder<TConcrete> Bind<TConcrete, TAbstract>()
+            where TConcrete : TAbstract
+        {
+            IBindingBuilder<TConcrete> bindingBuilder = new BindingBuilder<TConcrete>(this);
+
+            bindingBuilder.AddInterface(typeof(TAbstract));
+
+            return bindingBuilder;
+        }
+
+        public IBindingBuilder<TConcrete> Bind<TConcrete, TAbstract1, TAbstract2>()
+            where TConcrete : TAbstract1, TAbstract2
+        {
+            IBindingBuilder<TConcrete> bindingBuilder = new BindingBuilder<TConcrete>(this);
+
+            bindingBuilder.AddInterface(typeof(TAbstract1));
+            bindingBuilder.AddInterface(typeof(TAbstract2));
+        
+            return bindingBuilder;
+        }
+        
         public bool ContainerBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings = true)
         {
             binding = default;
