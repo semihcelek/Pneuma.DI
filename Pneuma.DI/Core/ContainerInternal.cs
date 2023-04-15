@@ -6,7 +6,7 @@ using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
 {
-    public sealed partial class Container
+    public sealed partial class DiContainer
     {
         private bool InterfaceBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings)
         {

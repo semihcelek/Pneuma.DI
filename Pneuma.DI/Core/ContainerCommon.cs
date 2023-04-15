@@ -5,7 +5,7 @@ using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
 {
-    public sealed partial class Container : IContainer, IInjector, IDisposable
+    public sealed partial class DiContainer : IContainer, IInjector, IDisposable
     {
         private readonly List<Binding> _registrations;
 
@@ -13,7 +13,7 @@ namespace Pneuma.DI.Core
 
         private bool _isValid;
 
-        public Container()
+        public DiContainer()
         {
             _registrations = new List<Binding>();
             _lazyBindingBuilderRegistrations = new List<IBindingBuilder>();

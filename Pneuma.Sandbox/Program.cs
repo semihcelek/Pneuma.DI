@@ -14,7 +14,7 @@ namespace Pneuma.Sandbox
 
         private static void ComposeObjectGraph()
         {
-            Container diContainer = new Container();
+            DiContainer diContainer = new DiContainer();
 
             diContainer.Bind<Foo>().AsTransient().Lazy();
             diContainer.Bind<Bar>().AsTransient().Lazy();

@@ -6,20 +6,20 @@ namespace Pneuma.DI.Tests.InjectionTests
 {
     public class AttributeInjectionTests
     {
-        private Container _container;
+        private DiContainer _diContainer;
     
         [SetUp]
         public void Setup()
         {
-            Container diContainer = new Container();
-            _container = diContainer;
+            DiContainer diContainer = new DiContainer();
+            _diContainer = diContainer;
         }
 
         [Test]
         public void AttributeInjector_Process_Inject_On_Fields()
         {
-            _container.Bind<Foo>().AsSingle().Lazy();
-            _container.Bind<Smi>().AsSingle().NonLazy();
+            _diContainer.Bind<Foo>().AsSingle().Lazy();
+            _diContainer.Bind<Smi>().AsSingle().NonLazy();
         }
     }
 }

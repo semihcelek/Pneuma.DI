@@ -8,13 +8,13 @@ namespace Pneuma.DI.Tests.InjectionTests
     {
         private ConstructorInjector _constructorInjector;
 
-        private Container _container;
+        private DiContainer _diContainer;
         
         [SetUp]
         public void Setup()
         {
-            _container = new Container();
-            _constructorInjector = ConstructorInjector.Create(_container);
+            _diContainer = new DiContainer();
+            _constructorInjector = ConstructorInjector.Create(_diContainer);
         }
     }
 }

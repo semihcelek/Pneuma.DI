@@ -9,19 +9,19 @@ namespace Pneuma.DI.Tests.ContainerTests
     [TestFixture]
     public class ContainerTests
     {
-        private Container _container;
+        private DiContainer _diContainer;
         
         [SetUp]
         public void Setup()
         {
-            Container diContainer = new Container();
-            _container = diContainer;
+            DiContainer diContainer = new DiContainer();
+            _diContainer = diContainer;
         }
 
         [Test]
         public void Bind_As_Single()
         {
-            _container.Bind<Foo>().AsSingle().NonLazy();
+            _diContainer.Bind<Foo>().AsSingle().NonLazy();
         }
 
         [Test]
@@ -29,15 +29,15 @@ namespace Pneuma.DI.Tests.ContainerTests
         {
             Assert.Throws<BindingFailedException>(() =>
             {
-                _container.Bind<Bar>().AsSingle().NonLazy();
+                _diContainer.Bind<Bar>().AsSingle().NonLazy();
             });
         }
         
         [Test]
         public void Bind_Multiple_Dependencies_As_Single()
         {
-            _container.Bind<Foo>().AsSingle().NonLazy();
-            _container.Bind<Bar>().AsSingle().NonLazy();
+            _diContainer.Bind<Foo>().AsSingle().NonLazy();
+            _diContainer.Bind<Bar>().AsSingle().NonLazy();
         }
 
         [Test]
@@ -45,65 +45,65 @@ namespace Pneuma.DI.Tests.ContainerTests
         {
             Assert.Throws<BindingFailedException>(() =>
             {
-                _container.Bind<Foo>().AsSingle().NonLazy();
-                _container.Bind<Foo>().AsSingle().NonLazy();
+                _diContainer.Bind<Foo>().AsSingle().NonLazy();
+                _diContainer.Bind<Foo>().AsSingle().NonLazy();
             });
         }
         
         [Test]
         public void Bind_Multiple_Dependencies_As_Transient()
         {
-            _container.Bind<Foo>().AsTransient().NonLazy();
-            _container.Bind<Bar>().AsTransient().NonLazy();
+            _diContainer.Bind<Foo>().AsTransient().NonLazy();
+            _diContainer.Bind<Bar>().AsTransient().NonLazy();
 
-            Assert.AreEqual(2, _container.GetActiveObjectCount());
+            Assert.AreEqual(2, _diContainer.GetActiveObjectCount());
         }
 
         [Test]
         public void Bind_Same_Dependency_As_Transient()
         {
-            _container.Bind<Foo>().AsTransient().NonLazy();
-            _container.Bind<Foo>().AsTransient().NonLazy();
-            _container.Bind<Foo>().AsTransient().NonLazy();
-            _container.Bind<Foo>().AsTransient().NonLazy();
+            _diContainer.Bind<Foo>().AsTransient().NonLazy();
+            _diContainer.Bind<Foo>().AsTransient().NonLazy();
+            _diContainer.Bind<Foo>().AsTransient().NonLazy();
+            _diContainer.Bind<Foo>().AsTransient().NonLazy();
             
-            Assert.AreEqual(4, _container.GetActiveObjectCount());
+            Assert.AreEqual(4, _diContainer.GetActiveObjectCount());
         }
         
         [Test]
         public void Bind_Same_Dependency_As_Transient_Lazy()
         {
-            _container.Bind<Foo>().AsTransient().Lazy();
-            _container.Bind<Foo>().AsTransient().Lazy();
-            _container.Bind<Foo>().AsTransient().Lazy();
-            _container.Bind<Foo>().AsTransient().Lazy();
+            _diContainer.Bind<Foo>().AsTransient().Lazy();
+            _diContainer.Bind<Foo>().AsTransient().Lazy();
+            _diContainer.Bind<Foo>().AsTransient().Lazy();
+            _diContainer.Bind<Foo>().AsTransient().Lazy();
             
-            Assert.AreEqual(0, _container.GetActiveObjectCount());
+            Assert.AreEqual(0, _diContainer.GetActiveObjectCount());
         }
 
         [Test]
         public void Bind_Interface_To_Implementation()
         {
-            _container.Bind<BazImplementation, IBaz>().AsSingle().NonLazy();
+            _diContainer.Bind<BazImplementation, IBaz>().AsSingle().NonLazy();
             
-            Assert.AreEqual(1, _container.GetActiveObjectCount());
+            Assert.AreEqual(1, _diContainer.GetActiveObjectCount());
         }
 
         [Test]
         public void Bind_Interface_To_Implementation_Transient()
         {
-            _container.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
-            _container.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
-            _container.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
-            _container.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
+            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
+            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
+            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
+            _diContainer.Bind<BazImplementation, IBaz>().AsTransient().NonLazy();
             
-            Assert.AreEqual(4, _container.GetActiveObjectCount());
+            Assert.AreEqual(4, _diContainer.GetActiveObjectCount());
         }
 
         [TearDown]
         public void TearDown()
         {
-            _container.Dispose();
+            _diContainer.Dispose();
         }
     }
 }

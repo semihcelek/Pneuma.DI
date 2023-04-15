@@ -9,22 +9,22 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
 {
     public class BindingBuilderTests
     {
-        private Container _container; 
+        private DiContainer _diContainer; 
     
         [SetUp]
         public void Setup()
         {
-            _container = new Container();
+            _diContainer = new DiContainer();
         }
     
         [Test]
         public void BindingBuilder_Binds_Singleton()
         {
-            BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_container);
+            BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_diContainer);
 
             bindingBuilder.AsSingle().NonLazy();
 
-            _container.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
+            _diContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
         
             Assert.AreEqual(typeof(Foo), retrievedBinding.BindingType);
             Assert.AreEqual(typeof(Foo), retrievedBinding.Instance.GetType());
@@ -36,11 +36,11 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         [Test]
         public void BindingBuilder_Binds_Transient()
         {
-            BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_container);
+            BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_diContainer);
 
             bindingBuilder.AsTransient().NonLazy();
 
-            _container.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
+            _diContainer.ContainerBindingLookup(typeof(Foo), out Binding retrievedBinding);
 
             Assert.AreEqual(typeof(Foo), retrievedBinding.BindingType);
             Assert.AreEqual(typeof(Foo), retrievedBinding.Instance.GetType());
@@ -54,10 +54,10 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         {
             Assert.Throws<BindingFailedException>(() =>
             {
-                BindingBuilder<Foo> bindingBuilderOne = new BindingBuilder<Foo>(_container);
+                BindingBuilder<Foo> bindingBuilderOne = new BindingBuilder<Foo>(_diContainer);
                 bindingBuilderOne.AsSingle().NonLazy();
 
-                BindingBuilder<Foo> bindingBuilderTwo = new BindingBuilder<Foo>(_container);
+                BindingBuilder<Foo> bindingBuilderTwo = new BindingBuilder<Foo>(_diContainer);
                 bindingBuilderTwo.AsSingle().NonLazy();
             });
         }
@@ -65,11 +65,11 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         [Test]
         public void BindingBuilder_Binds_Interface_As_Singleton()
         {
-            BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_container);
+            BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_diContainer);
             bindingBuilder.AddInterface(typeof(IBaz));
             bindingBuilder.AsSingle().NonLazy();
 
-            _container.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
+            _diContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
             Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
             Assert.AreEqual(typeof(BazImplementation), retrievedBinding.InstanceType);
@@ -80,12 +80,12 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         [Test]
         public void BindingBuilder_Binds_Interface_As_Transient()
         {
-            BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_container);
+            BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_diContainer);
             bindingBuilder.AddInterface(typeof(IBaz));
         
             bindingBuilder.AsTransient().NonLazy();
 
-            _container.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
+            _diContainer.ContainerBindingLookup(typeof(IBaz), out Binding retrievedBinding);
         
             Assert.AreEqual(typeof(BazImplementation), retrievedBinding.Instance.GetType());
             Assert.AreEqual(typeof(BazImplementation), retrievedBinding.InstanceType);
@@ -96,11 +96,11 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         [Test]
         public void BindingBuilder_Binds_Lazy_Not_Registered_Container()
         {
-            BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_container);
+            BindingBuilder<BazImplementation> bindingBuilder = new BindingBuilder<BazImplementation>(_diContainer);
             bindingBuilder.AddInterface(typeof(IBaz));
             bindingBuilder.AsTransient().Lazy();
 
-            bool isRegistered = _container.ContainerBindingLookup(typeof(IBaz), out Binding _, false);
+            bool isRegistered = _diContainer.ContainerBindingLookup(typeof(IBaz), out Binding _, false);
         
             Assert.IsFalse(isRegistered);
         }
@@ -108,12 +108,12 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         [Test]
         public void BindingBuilder_Binds_Lazy_And_Activates_When_Required()
         {
-            BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_container);
+            BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_diContainer);
             bindingBuilder.AsTransient().Lazy();
 
-            _container.Bind<Bar>().AsTransient().NonLazy();
+            _diContainer.Bind<Bar>().AsTransient().NonLazy();
         
-            bool isRegistered = _container.ContainerBindingLookup(typeof(Foo), out Binding _);
+            bool isRegistered = _diContainer.ContainerBindingLookup(typeof(Foo), out Binding _);
         
             Assert.IsTrue(isRegistered);
         }
@@ -121,13 +121,13 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         [Test]
         public void BindingBuilder_Doesnt_Binds_Lazy()
         {
-            BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_container);
+            BindingBuilder<Foo> bindingBuilder = new BindingBuilder<Foo>(_diContainer);
             bindingBuilder.AsTransient().Lazy();
 
-            _container.Bind<Foo>().AsSingle().Lazy();
+            _diContainer.Bind<Foo>().AsSingle().Lazy();
         
-            bool isFooRegistered = _container.ContainerBindingLookup(typeof(Foo), out Binding _, false);
-            bool isBarRegistered = _container.ContainerBindingLookup(typeof(Bar), out Binding _, false);
+            bool isFooRegistered = _diContainer.ContainerBindingLookup(typeof(Foo), out Binding _, false);
+            bool isBarRegistered = _diContainer.ContainerBindingLookup(typeof(Bar), out Binding _, false);
         
             Assert.IsFalse(isFooRegistered);
             Assert.IsFalse(isBarRegistered);
@@ -136,7 +136,7 @@ namespace Pneuma.DI.Tests.BindingBuilderTests
         [TearDown]
         public void TearDown()
         {
-            _container.Dispose();
+            _diContainer.Dispose();
         }
     }
 }
