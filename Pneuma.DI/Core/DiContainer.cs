@@ -6,7 +6,7 @@ using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
 {
-    public sealed class DiContainer : IContainer, IInjector
+    public sealed class DiContainer : IContainer
     {
         private readonly List<Binding> _registrations;
 
