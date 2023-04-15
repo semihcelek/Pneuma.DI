@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Pneuma.DI.Core.Attributes
+namespace Pneuma.DI.Attributes
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Method, AllowMultiple = false)]
     public class InjectAttribute : Attribute

@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
 using Pneuma.DI.Core;
-using Pneuma.DI.Core.Extensions;
 using Pneuma.DI.Exception;
+using Pneuma.DI.Extensions;
 using Pneuma.DI.Tests.Examples;
 
 namespace Pneuma.DI.Tests.ContainerTests

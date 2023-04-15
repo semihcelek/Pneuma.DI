@@ -1,4 +1,4 @@
-﻿namespace Pneuma.DI.Core.Bindings
+﻿namespace Pneuma.DI.Bindings
 {
     public interface ILifeTimeBuilder<TBinding>
     {

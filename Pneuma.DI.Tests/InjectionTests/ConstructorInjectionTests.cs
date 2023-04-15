@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 using Pneuma.DI.Core;
-using Pneuma.DI.Core.Injectors;
+using Pneuma.DI.Injectors;
 
 namespace Pneuma.DI.Tests.InjectionTests
 {

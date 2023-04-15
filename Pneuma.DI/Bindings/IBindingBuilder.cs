@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Pneuma.DI.Core.Bindings
+namespace Pneuma.DI.Bindings
 {
     public interface IBindingBuilder<TBinding> : ILifeTimeBuilder<TBinding>, IBindingActivator<TBinding>,
         IAbstractBinder<TBinding>, IBindingBuilder

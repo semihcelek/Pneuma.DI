@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using Pneuma.DI.Core.BindingContexts;
-using Pneuma.DI.Core.Injectors;
+using Pneuma.DI.BindingContexts;
+using Pneuma.DI.Core;
+using Pneuma.DI.Injectors;
 
-namespace Pneuma.DI.Core.Bindings
+namespace Pneuma.DI.Bindings
 {
     public struct BindingBuilder<TBinding> : IBindingBuilder<TBinding>
     {

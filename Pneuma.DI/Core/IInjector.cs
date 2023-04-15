@@ -1,4 +1,4 @@
-﻿using Pneuma.DI.Core.Bindings;
+﻿using Pneuma.DI.Bindings;
 
 namespace Pneuma.DI.Core
 {

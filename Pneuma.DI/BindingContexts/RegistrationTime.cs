@@ -1,4 +1,4 @@
-﻿namespace Pneuma.DI.Core.BindingContexts
+﻿namespace Pneuma.DI.BindingContexts
 {
     public enum RegistrationTime
     {

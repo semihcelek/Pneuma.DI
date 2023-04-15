@@ -1,7 +1,7 @@
 ﻿using NUnit.Framework;
+using Pneuma.DI.BindingContexts;
+using Pneuma.DI.Bindings;
 using Pneuma.DI.Core;
-using Pneuma.DI.Core.BindingContexts;
-using Pneuma.DI.Core.Bindings;
 using Pneuma.DI.Exception;
 using Pneuma.DI.Tests.Examples;
 

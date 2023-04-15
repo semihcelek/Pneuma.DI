@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Pneuma.DI.Core.BindingContexts;
-using Pneuma.DI.Core.Bindings;
+using Pneuma.DI.BindingContexts;
+using Pneuma.DI.Bindings;
 using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core

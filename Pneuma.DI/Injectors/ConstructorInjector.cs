@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using Pneuma.DI.Core.Bindings;
+using Pneuma.DI.Bindings;
+using Pneuma.DI.Core;
 using Pneuma.DI.Exception;
 
-namespace Pneuma.DI.Core.Injectors
+namespace Pneuma.DI.Injectors
 {
     public readonly struct ConstructorInjector
     {

@@ -1,6 +1,5 @@
 ﻿using System;
-using Pneuma.DI.Core.BindingContexts;
-using Pneuma.DI.Core.Bindings;
+using Pneuma.DI.Bindings;
 
 namespace Pneuma.DI.Core
 {

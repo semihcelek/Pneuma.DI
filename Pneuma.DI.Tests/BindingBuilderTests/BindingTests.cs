@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
-using Pneuma.DI.Core.BindingContexts;
-using Pneuma.DI.Core.Bindings;
+using Pneuma.DI.BindingContexts;
+using Pneuma.DI.Bindings;
 using Pneuma.DI.Tests.Examples;
 
 namespace Pneuma.DI.Tests.BindingBuilderTests

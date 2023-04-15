@@ -1,6 +1,7 @@
-﻿using Pneuma.DI.Core.Bindings;
+﻿using Pneuma.DI.Bindings;
+using Pneuma.DI.Core;
 
-namespace Pneuma.DI.Core.Extensions
+namespace Pneuma.DI.Extensions
 {
     public static class ContainerExtensions
     {

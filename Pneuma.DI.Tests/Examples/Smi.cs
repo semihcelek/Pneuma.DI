@@ -1,4 +1,4 @@
-﻿using Pneuma.DI.Core.Attributes;
+﻿using Pneuma.DI.Attributes;
 
 namespace Pneuma.DI.Tests.Examples
 {
