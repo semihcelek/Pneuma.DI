@@ -6,8 +6,43 @@ using Pneuma.DI.Exception;
 
 namespace Pneuma.DI.Core
 {
-    public sealed partial class DiContainer
+    public sealed class DiContainer : IContainer, IInjector
     {
+        private readonly List<Binding> _registrations;
+
+        private readonly List<IBindingBuilder> _lazyBindingBuilderRegistrations;
+
+        public DiContainer()
+        {
+            _registrations = new List<Binding>();
+            _lazyBindingBuilderRegistrations = new List<IBindingBuilder>();
+        }
+
+        public IBindingBuilder<T> Bind<T>()
+        {
+            return new BindingBuilder<T>(this);
+        }
+        
+        public bool ContainerBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings = true)
+        {
+            binding = default;
+
+            return lookupType.IsInterface 
+                ? InterfaceBindingLookup(lookupType, out binding, bindAvailableLazyBindings) 
+                : ConcreteBindingLookup(lookupType, out binding, bindAvailableLazyBindings);
+        }
+
+        public bool RegisterBinding(Binding binding)
+        {
+            return RegisterInternal(binding);
+        }
+
+        public bool RegisterLazyBinding<TBinding>(BindingBuilder<TBinding> bindingBuilder)
+        {
+            _lazyBindingBuilderRegistrations.Add(bindingBuilder);
+            return true;
+        }
+        
         private bool InterfaceBindingLookup(Type lookupType, out Binding binding, bool bindAvailableLazyBindings)
         {
             binding = default;
@@ -161,6 +196,17 @@ namespace Pneuma.DI.Core
             }
 
             return false;
+        }
+        
+        public int GetActiveObjectCount()
+        {
+            return _registrations.Count;
+        }
+
+        public void Dispose()
+        {
+            _registrations.Clear();
+            _lazyBindingBuilderRegistrations.Clear();
         }
     }
 }
